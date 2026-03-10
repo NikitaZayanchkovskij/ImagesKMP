@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<resources>
+
+    <!-- Data Errors -->
+    <string name="error_local_storage_is_full">Память вашего устройства заполнена. Пожалуйста, удалите что-нибудь и попробуйте ещё раз.</string>
+    <string name="error_local_file_not_found">Файл, который вы ищите не найден...</string>
+    <string name="error_unknown">Что-то пошло не так... Неизвестная ошибка.</string>
+    <string name="error_remote_bad_request">Ошибка запроса: пожалуйста, проверьте, что данные, которые вы пытаетесь отправить, верные.</string>
+    <string name="error_remote_request_timeout">Таймаут запроса.</string>
+    <string name="error_remote_unauthorized">Вы не авторизированны: пожалуйста, проверьте ваши данные.</string>
+    <string name="error_remote_forbidden">Извините, у вас нет доступа.</string>
+    <string name="error_remote_not_found">Ресурс, к которому вы пытаетесь обратиться, не найден.</string>
+    <string name="error_remote_conflict">Конфликт... Возможно данные уже существуют?</string>
+    <string name="error_remote_too_many_requests">Вы отправляете слишком много запросов. Пожалуйста, попробуйте позже.</string>
+    <string name="error_remote_no_internet">Пожалуйста, проверьте соединение с интернетом.</string>
+    <string name="error_remote_payload_too_large">Размер данных, которые вы пытаетесь отправить, слишком большой.</string>
+    <string name="error_remote_server_error">Ошибка сервера...</string>
+    <string name="error_remote_server_unavailable">Сервер недоступен... Пожалуйста, попробуйте позже.</string>
+    <string name="error_remote_serialization">Ошибка преобразования данных.</string>
+    <string name="error_remote_redirect">Что-то пошло не так... Ошибка перенаправления запроса.</string>
+    <string name="error_remote_json_conversion">Ошибка преобразования JSON результата.</string>
+
+</resources>
