@@ -1,5 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models
 
+// TODO: Переименовать получше, так не только curated image думаю выглядит,
+// а это общая модель
 data class CuratedImagesDomainModel(
     val pageNumber: Int,
     val amountPerPage: Int,
@@ -11,6 +13,8 @@ data class CuratedImagesDomainModel(
 
 data class ImageDomainModel(
     val id: Long,
+    val isInBookmarks: Boolean,
+    val imageCategory: String? = null,
     val width: Int,
     val height: Int,
     val url: String,

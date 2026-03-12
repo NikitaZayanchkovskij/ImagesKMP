@@ -23,6 +23,8 @@ fun CuratedImagesDto.mapToDomainModel(): CuratedImagesDomainModel {
 fun ImageDto.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
         id = id,
+        isInBookmarks = false,
+        imageCategory = null,
         width = width,
         height = height,
         url = url,

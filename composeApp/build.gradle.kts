@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -36,6 +38,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.splashscreen)
+
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -50,6 +54,9 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.bundles.koin.common)
             implementation(libs.bundles.ktor.common)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
 
             implementation(libs.material3.adaptive)
             implementation(libs.touchlab.kermit)
@@ -67,6 +74,11 @@ kotlin {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     androidRuntimeClasspath(libs.compose.ui.tooling)
+    ksp(libs.androidx.room.compiler)
 }

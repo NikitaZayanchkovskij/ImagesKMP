@@ -17,6 +17,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CuratedImagesDto(
+    // TODO: (Переделать из CuratedDto в dto которое применимо
+    //  ко всем, не только к curated например просто ImagesListDto,
+    //  тут по сути добавить только одно null-able поле
+    //  total result на апи приходит когда делашеь серч
+    //  изображений
+    //  И в структуре проекта поправить)
     @SerialName("page") val page: Int,
     @SerialName("per_page") val per_page: Int,
     @SerialName("photos") val photos: List<ImageDto>,
