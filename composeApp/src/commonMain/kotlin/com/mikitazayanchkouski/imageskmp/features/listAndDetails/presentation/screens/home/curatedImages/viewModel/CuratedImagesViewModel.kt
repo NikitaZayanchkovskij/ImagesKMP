@@ -53,7 +53,7 @@ class CuratedImagesViewModel(
          */
         .onStart {
             if (!isInitialDataLoaded) {
-                println("Load images...")
+//                println("Load images...")
                 loadImages()
                 isInitialDataLoaded = true
             }

@@ -55,6 +55,8 @@ kotlin {
             implementation(libs.touchlab.kermit)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.jetbrains.compose.navigation)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

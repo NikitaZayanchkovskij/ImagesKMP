@@ -1,9 +1,14 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -12,10 +17,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.CuratedImagesUiModel
@@ -25,6 +34,9 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesState
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesViewModel
+import imageskmp.composeapp.generated.resources.Res
+import imageskmp.composeapp.generated.resources.icon_image_placeholder
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -64,21 +76,41 @@ private fun CuratedImagesScreen(
     imagesState: CuratedImagesState,
     userAction: (CuratedImagesActions) -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "CuratedImagesScreen")
-        Button(
-            onClick = {
-                userAction(
-                    CuratedImagesActions.OnNavigateToImageDetails(imageId = 12345)
+    // Эта проверка нужна после проверки из лоудинг фалз
+    if (!imagesState.isDataReceivedSuccessfully) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "ERROR receiving data")
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(space = 20.dp)
+            ) {
+            items(
+                items = imagesState.imagesList?.listOfImages ?: emptyList(),
+                key = { imageUiModel -> imageUiModel.id }
+            ) { imageUiModel ->
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 300.dp)
+                        .clip(shape = RoundedCornerShape(size = 20.dp)),
+                    model = imageUiModel.imageResolutions.landscape,
+                    contentDescription = imageUiModel.description,
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(
+                        resource = Res.drawable.icon_image_placeholder
+                    )
                 )
             }
-        ) {
-            Text("Go to image details screen")
         }
+
     }
 }
 
