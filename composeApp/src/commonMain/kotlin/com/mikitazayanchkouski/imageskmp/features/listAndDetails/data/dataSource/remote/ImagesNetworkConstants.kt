@@ -2,5 +2,6 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSourc
 
 object ImagesNetworkConstants {
     const val BASE_URL = "https://api.pexels.com/v1/"
-    const val CURATED_IMAGES = "curated"
+    const val CURATED = "curated"
+    const val SEARCH = "search"
 }

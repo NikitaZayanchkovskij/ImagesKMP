@@ -27,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.CuratedImagesUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesActions
@@ -136,12 +136,15 @@ private fun CuratedImagesScreenPreview() {
                 imagesState = CuratedImagesState(
                     isLoading = false,
                     isDataReceivedSuccessfully = true,
-                    imagesList = CuratedImagesUiModel(
+                    imagesList = ImagesListUiModel(
+                        totalResults = 10,
                         pageNumber = 1,
                         amountPerPage = 1,
                         listOfImages = listOf(
                             ImageUiModel(
                                 id = 2014422,
+                                imageCategory = "CURATED",
+                                isInBookmarks = true,
                                 width = 3024,
                                 height = 3024,
                                 url = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",

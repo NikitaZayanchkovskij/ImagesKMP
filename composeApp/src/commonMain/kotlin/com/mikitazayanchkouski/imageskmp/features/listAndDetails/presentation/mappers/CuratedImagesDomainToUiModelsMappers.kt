@@ -1,14 +1,15 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers
 
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.CuratedImagesDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageSrcDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.CuratedImagesUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 
-fun CuratedImagesDomainModel.mapToUiModel(): CuratedImagesUiModel {
-    return CuratedImagesUiModel(
+fun ImagesListDomainModel.mapToUiModel(): ImagesListUiModel {
+    return ImagesListUiModel(
+        totalResults = totalResults,
         pageNumber = pageNumber,
         amountPerPage = amountPerPage,
         listOfImages = listOfImages.map { domainModel ->
@@ -23,6 +24,8 @@ fun CuratedImagesDomainModel.mapToUiModel(): CuratedImagesUiModel {
 fun ImageDomainModel.mapToUiModel(): ImageUiModel {
     return ImageUiModel(
         id = id,
+        imageCategory = imageCategory,
+        isInBookmarks = isInBookmarks,
         width = width,
         height = height,
         url = url,

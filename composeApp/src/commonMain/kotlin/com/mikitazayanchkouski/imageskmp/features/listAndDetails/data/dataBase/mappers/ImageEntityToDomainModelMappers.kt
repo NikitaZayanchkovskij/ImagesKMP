@@ -7,9 +7,9 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSour
 
 fun ImageEntity.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
-        id = id,
-        isInBookmarks = isInBookmarks,
+        id = imageId,
         imageCategory = imageCategory,
+        isInBookmarks = isInBookmarks,
         width = width,
         height = height,
         url = url,

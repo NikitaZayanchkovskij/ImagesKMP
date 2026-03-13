@@ -1,7 +1,8 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models
 
 // TODO: Later check, which parameters I need, and which I don't
-data class CuratedImagesUiModel(
+data class ImagesListUiModel(
+    val totalResults: Int,
     val pageNumber: Int,
     val amountPerPage: Int,
     val listOfImages: List<ImageUiModel>,
@@ -12,6 +13,8 @@ data class CuratedImagesUiModel(
 
 data class ImageUiModel(
     val id: Long,
+    val imageCategory: String,
+    val isInBookmarks: Boolean,
     val width: Int,
     val height: Int,
     val url: String,

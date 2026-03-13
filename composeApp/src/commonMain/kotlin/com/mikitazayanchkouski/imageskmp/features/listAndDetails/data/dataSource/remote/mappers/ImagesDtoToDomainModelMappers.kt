@@ -1,14 +1,15 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.mappers
 
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.CuratedImagesDto
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageSrcDto
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.CuratedImagesDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageSrcDomainModel
 
-fun CuratedImagesDto.mapToDomainModel(): CuratedImagesDomainModel {
-    return CuratedImagesDomainModel(
+fun ImagesListDto.mapToDomainModel(): ImagesListDomainModel {
+    return ImagesListDomainModel(
+        totalResults = total_results,
         pageNumber = page,
         amountPerPage = per_page,
         listOfImages = photos.map { imageDto ->
@@ -23,8 +24,8 @@ fun CuratedImagesDto.mapToDomainModel(): CuratedImagesDomainModel {
 fun ImageDto.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
         id = id,
+        imageCategory = "CURATED",
         isInBookmarks = false,
-        imageCategory = null,
         width = width,
         height = height,
         url = url,
