@@ -23,12 +23,12 @@ fun ImagesListDomainModel.mapToUiModel(): ImagesListUiModel {
 
 fun ImageDomainModel.mapToUiModel(): ImageUiModel {
     return ImageUiModel(
-        id = id,
+        imageId = imageId,
         imageCategory = imageCategory,
         isInBookmarks = isInBookmarks,
         width = width,
         height = height,
-        url = url,
+        imageUrl = imageUrl,
         photographerName = photographerName,
         photographerUrl = photographerUrl,
         photographerId = photographerId,

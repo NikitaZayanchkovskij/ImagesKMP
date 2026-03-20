@@ -11,12 +11,12 @@ data class ImagesListDomainModel(
 )
 
 data class ImageDomainModel(
-    val id: Long,
+    val imageId: Long,
     val imageCategory: String,
     val isInBookmarks: Boolean,
     val width: Int,
     val height: Int,
-    val url: String,
+    val imageUrl: String,
     val photographerName: String,
     val photographerUrl: String,
     val photographerId: Long,

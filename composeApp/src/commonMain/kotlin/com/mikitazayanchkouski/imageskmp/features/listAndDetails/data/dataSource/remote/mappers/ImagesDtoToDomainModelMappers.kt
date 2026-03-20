@@ -23,12 +23,12 @@ fun ImagesListDto.mapToDomainModel(): ImagesListDomainModel {
 
 fun ImageDto.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
-        id = id,
+        imageId = id,
         imageCategory = "CURATED",
         isInBookmarks = false,
         width = width,
         height = height,
-        url = url,
+        imageUrl = url,
         photographerName = photographer,
         photographerUrl = photographer_url,
         photographerId = photographer_id,

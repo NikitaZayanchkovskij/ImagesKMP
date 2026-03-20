@@ -93,7 +93,7 @@ private fun CuratedImagesScreen(
             ) {
             items(
                 items = imagesState.imagesList?.listOfImages ?: emptyList(),
-                key = { imageUiModel -> imageUiModel.id }
+                key = { imageUiModel -> imageUiModel.imageId }
             ) { imageUiModel ->
                 AsyncImage(
                     modifier = Modifier
@@ -142,12 +142,12 @@ private fun CuratedImagesScreenPreview() {
                         amountPerPage = 1,
                         listOfImages = listOf(
                             ImageUiModel(
-                                id = 2014422,
+                                imageId = 2014422,
                                 imageCategory = "CURATED",
                                 isInBookmarks = true,
                                 width = 3024,
                                 height = 3024,
-                                url = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
+                                imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
                                 photographerName = "Joey Farina",
                                 photographerUrl = "https://www.pexels.com/@joey",
                                 photographerId = 680589,
