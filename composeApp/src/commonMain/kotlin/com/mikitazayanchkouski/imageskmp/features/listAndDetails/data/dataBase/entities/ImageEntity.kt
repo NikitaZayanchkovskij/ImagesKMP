@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey
  * follows One-to-Many relationship.
  *
  * A single image could be in cache, AND in bookmarks.
- * And also, a category tab, or bookmarks screen, hold multiple images.
+ * And also, a single category tab, or bookmarks screen, hold multiple images.
  */
-@Entity()
+@Entity
 data class ImageEntity(
 
     /* This primaryKey will combine the imageId and the imageCategory.
