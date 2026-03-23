@@ -3,6 +3,7 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.repositor
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.CustomResult
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.DataError
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.map
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.LocalImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.RemoteImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.mappers.mapToDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImagesListDomainModel
@@ -10,11 +11,12 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.reposito
 
 
 class OfflineFirstImagesRepository(
-    private val remoteDataSource: RemoteImagesDataSource
-//    private val localDataSource: RoomLocalImagesDataSource
+    private val remoteDataSource: RemoteImagesDataSource,
+    private val localDataSource: LocalImagesDataSource
 ) : ImagesRepository {
 
     override suspend fun getCuratedImages(): CustomResult<ImagesListDomainModel, DataError.Remote> {
+        println(localDataSource.getBookmarks())
         return remoteDataSource.getCuratedImages().map { imagesDto ->
             imagesDto.mapToDomainModel()
         }
