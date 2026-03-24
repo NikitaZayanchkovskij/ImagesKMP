@@ -11,11 +11,7 @@ package com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling
  * In this case, the generic error is for example this class:
  * PasswordErrorDto(val error: String)
  *
- * Word "out" is needed to be able to pass subtypes,
- * of what we pass as Data, or as Error.
- * (For example: DataError.Remote.UNAUTHORIZED)
- *
- * And also to be able to receive ONLY Success, or ONLY Failure.
+ * TODO: ADD comment about out keyword
  */
 sealed interface CustomResult<out Data, out Error : CustomError> {
     data class Success<out Data>(val data: Data) : CustomResult<Data, Nothing>

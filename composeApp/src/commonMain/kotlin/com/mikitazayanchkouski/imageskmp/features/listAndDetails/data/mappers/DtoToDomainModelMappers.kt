@@ -1,19 +1,19 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.mappers
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers
 
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageSrcDto
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImagesListDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 
-fun ImagesListDto.mapToDomainModel(): ImagesListDomainModel {
+fun ImagesListDto.mapToDomainModel(category: String): ImagesListDomainModel {
     return ImagesListDomainModel(
         totalResults = total_results,
         pageNumber = page,
         amountPerPage = per_page,
         listOfImages = photos.map { imageDto ->
-            imageDto.mapToDomainModel()
+            imageDto.mapToDomainModel(category = category)
         },
         numberOfResultsForTheRequest = total_results,
         previousPage = prev_page,
@@ -21,10 +21,10 @@ fun ImagesListDto.mapToDomainModel(): ImagesListDomainModel {
     )
 }
 
-fun ImageDto.mapToDomainModel(): ImageDomainModel {
+fun ImageDto.mapToDomainModel(category: String): ImageDomainModel {
     return ImageDomainModel(
         imageId = id,
-        imageCategory = "CURATED",
+        imageCategory = category,
         isInBookmarks = false,
         width = width,
         height = height,

@@ -1,14 +1,20 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataBase.entities
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/** In case of this application and according to my logic - the database
+/** In case of this application, and according to my logic - the database
  * follows One-to-Many relationship.
  *
  * A single image could be in cache, AND in bookmarks.
- * And also, a single category tab, or bookmarks screen, hold multiple images.
+ * And also, a single category TabRow's tab,
+ * or the BookmarksScreen, hold multiple images.
+ *
+ * I have decided to use separate [BookmarkedImageEntity] for the following reason:
+ * When I need to display BookmarksScreen - I will use BookmarkedImageEntity,
+ * instead of querying the whole database,
+ * and check "isInBookmarks" field in every single image, that is cached.
  */
 @Entity
 data class ImageEntity(

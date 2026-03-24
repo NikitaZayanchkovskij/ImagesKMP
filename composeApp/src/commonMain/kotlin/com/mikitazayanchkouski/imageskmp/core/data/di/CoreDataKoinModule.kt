@@ -4,8 +4,8 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.mikitazayanchkouski.imageskmp.core.data.logging.KermitLogger
 import com.mikitazayanchkouski.imageskmp.core.data.network.HttpClientFactory
 import com.mikitazayanchkouski.imageskmp.core.domain.logging.PexelsLogger
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataBase.DatabaseFactory
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataBase.ImagesDatabase
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.DatabaseFactory
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.ImagesDatabase
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.LocalImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.RoomLocalImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.KtorRemoteImagesDataSource

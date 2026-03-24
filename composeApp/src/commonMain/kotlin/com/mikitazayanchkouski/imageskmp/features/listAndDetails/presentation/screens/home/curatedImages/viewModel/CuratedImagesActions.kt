@@ -2,6 +2,6 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 sealed interface CuratedImagesActions {
     data object OnRefresh : CuratedImagesActions
-    data object OnLoadImages : CuratedImagesActions
+    data object OnLoadCuratedImages : CuratedImagesActions
     data class OnNavigateToImageDetails(val imageId: Long) : CuratedImagesActions
 }

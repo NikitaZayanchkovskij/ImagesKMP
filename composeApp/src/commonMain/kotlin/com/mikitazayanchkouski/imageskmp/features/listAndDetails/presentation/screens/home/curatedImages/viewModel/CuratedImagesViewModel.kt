@@ -7,9 +7,11 @@ import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSucc
 import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringResource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesEvents.OnNavigateToImageDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -42,7 +44,15 @@ class CuratedImagesViewModel(
     private var isInitialDataLoaded = false
 
     private val _state = MutableStateFlow(value = CuratedImagesState())
-    val state = _state
+    val state = combine(
+        flow = _state,
+        flow2 = imagesRepository.getCuratedImagesFromTheDatabase()
+    ) { currentImagesState, databaseDomainModels ->
+        val imagesListAsUiModels = databaseDomainModels.map { domainModel ->
+            domainModel.mapToUiModel()
+        }
+        currentImagesState.copy(imagesList = imagesListAsUiModels)
+    }
         /* We can also use init block of the view model,
          * but then in test cases, there will be no way to initialize
          * the view model, without initializing the data loading.
@@ -69,43 +79,37 @@ class CuratedImagesViewModel(
             is CuratedImagesActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
-                        element = CuratedImagesEvents.OnNavigateToImageDetails(
+                        element = OnNavigateToImageDetails(
                             imageId = action.imageId
                         )
                     )
                 }
             }
 
-            CuratedImagesActions.OnRefresh -> println("OnRefresh")
-            CuratedImagesActions.OnLoadImages -> loadImages()
+            CuratedImagesActions.OnRefresh -> loadImages()
+            CuratedImagesActions.OnLoadCuratedImages -> loadImages()
         }
     }
 
     private fun loadImages() {
         viewModelScope.launch {
             _state.update { model ->
-                model.copy(
-                    isLoading = true,
-                    isDataReceivedSuccessfully = false
-                )
+                model.copy(isLoading = true)
             }
 
             imagesRepository
-                .getCuratedImages()
-                .onSuccess { imagesDomainModel ->
-                    val imagesUiModels = imagesDomainModel.mapToUiModel()
-
-                    println("imagesUiModels: $imagesUiModels")
-
+                .fetchCuratedImagesFromTheServer()
+                .onSuccess {
+                    println("SUCCESS fetchCuratedImagesFromTheServer()")
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
-                            isDataReceivedSuccessfully = true,
-                            imagesList = imagesUiModels
+                            isDataReceivedSuccessfully = true
                         )
                     }
                 }
                 .onFailure { remoteDataError ->
+                    println("FAILURE fetchCuratedImagesFromTheServer(), remoteDataError: $remoteDataError")
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
@@ -113,7 +117,7 @@ class CuratedImagesViewModel(
                         )
                     }
                     eventChannel.send(
-                        element = CuratedImagesEvents.OnImagesLoadingFailed(
+                        element = CuratedImagesEvents.OnCuratedImagesLoadingFailed(
                             message = remoteDataError.mapToStringResource()
                         )
                     )

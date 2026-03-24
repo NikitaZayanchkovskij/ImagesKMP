@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataBase
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase
 
 import android.content.Context
 import androidx.room.Room

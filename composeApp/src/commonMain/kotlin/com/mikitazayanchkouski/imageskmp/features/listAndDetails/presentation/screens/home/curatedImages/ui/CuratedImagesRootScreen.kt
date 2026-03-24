@@ -27,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesActions
@@ -53,7 +52,7 @@ fun CuratedImagesRoot(
                 onNavigateToImageDetails(event.imageId)
             }
 
-            is CuratedImagesEvents.OnImagesLoadingFailed -> println(
+            is CuratedImagesEvents.OnCuratedImagesLoadingFailed -> println(
                 "OnImagesLoadingFailed show info in snack bar"
                 /* А на фоне, где должны быть изображения
                 * просто пока они не загружены
@@ -90,9 +89,9 @@ private fun CuratedImagesScreen(
                 .padding(horizontal = 20.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(space = 20.dp)
-            ) {
+        ) {
             items(
-                items = imagesState.imagesList?.listOfImages ?: emptyList(),
+                items = imagesState.imagesList,
                 key = { imageUiModel -> imageUiModel.imageId }
             ) { imageUiModel ->
                 AsyncImage(
@@ -136,38 +135,32 @@ private fun CuratedImagesScreenPreview() {
                 imagesState = CuratedImagesState(
                     isLoading = false,
                     isDataReceivedSuccessfully = true,
-                    imagesList = ImagesListUiModel(
-                        totalResults = 10,
-                        pageNumber = 1,
-                        amountPerPage = 1,
-                        listOfImages = listOf(
-                            ImageUiModel(
-                                imageId = 2014422,
-                                imageCategory = "CURATED",
-                                isInBookmarks = true,
-                                width = 3024,
-                                height = 3024,
-                                imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
-                                photographerName = "Joey Farina",
-                                photographerUrl = "https://www.pexels.com/@joey",
-                                photographerId = 680589,
-                                avgColor = "#978E82",
-                                imageResolutions = ImageSrcUiModel(
-                                    original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
-                                    large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                                    large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-                                    medium = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350",
-                                    small = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130",
-                                    portrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
-                                    landscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-                                    tiny = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
-                                ),
-                                liked = false,
-                                description = "Brown Rocks During Golden Hour"
-                            )
-                        ),
-                        numberOfResultsForTheRequest = 1
-                    )
+                    imagesList = (1..10).map { index ->
+                        ImageUiModel(
+                            imageId = index.toLong(),
+                            imageCategory = "CURATED",
+                            isInBookmarks = true,
+                            width = 3024,
+                            height = 3024,
+                            imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
+                            photographerName = "Joey Farina",
+                            photographerUrl = "https://www.pexels.com/@joey",
+                            photographerId = 680589,
+                            avgColor = "#978E82",
+                            imageResolutions = ImageSrcUiModel(
+                                original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
+                                large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                                large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+                                medium = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350",
+                                small = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130",
+                                portrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+                                landscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+                                tiny = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
+                            ),
+                            liked = false,
+                            description = "Brown Rocks During Golden Hour"
+                        )
+                    }
                 ),
                 userAction = { action -> }
             )

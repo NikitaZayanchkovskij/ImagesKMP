@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.dataSource.remote.models
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models
 
 data class ImagesListDomainModel(
     val totalResults: Int,

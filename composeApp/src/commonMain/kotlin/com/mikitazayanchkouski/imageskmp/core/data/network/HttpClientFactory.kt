@@ -1,7 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.core.data.network
 
 import com.mikitazayanchkouski.imageskmp.core.domain.logging.PexelsLogger
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.ImagesNetworkConstants
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.NetworkConstants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
@@ -12,6 +12,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -44,10 +45,10 @@ class HttpClientFactory(
             }
             defaultRequest {
                 header(
-                    key = "x-api-key",
+                    key = HttpHeaders.Authorization,
                     value = CoreNetworkConstants.API_KEY
                 )
-                url(urlString = ImagesNetworkConstants.BASE_URL)
+                url(urlString = NetworkConstants.BASE_URL)
                 contentType(type = ContentType.Application.Json)
             }
         }
