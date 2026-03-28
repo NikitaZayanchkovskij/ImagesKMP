@@ -5,9 +5,10 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 
-fun ImagesListDto.mapToDomainModel(category: String): ImagesListDomainModel {
+fun ImagesListDto.mapToDomainModel(category: ImagesCategories): ImagesListDomainModel {
     return ImagesListDomainModel(
         totalResults = total_results,
         pageNumber = page,
@@ -21,10 +22,10 @@ fun ImagesListDto.mapToDomainModel(category: String): ImagesListDomainModel {
     )
 }
 
-fun ImageDto.mapToDomainModel(category: String): ImageDomainModel {
+fun ImageDto.mapToDomainModel(category: ImagesCategories): ImageDomainModel {
     return ImageDomainModel(
         imageId = id,
-        imageCategory = category,
+        imageCategory = category.inServerFormat,
         isInBookmarks = false,
         width = width,
         height = height,

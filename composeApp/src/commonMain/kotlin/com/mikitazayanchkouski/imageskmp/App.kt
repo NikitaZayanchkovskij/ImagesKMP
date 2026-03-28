@@ -1,11 +1,7 @@
 package com.mikitazayanchkouski.imageskmp
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,18 +14,11 @@ import com.mikitazayanchkouski.imageskmp.navigation.NavigationRoot
 @Composable
 fun App() {
     PexelsTheme {
-        Scaffold(
+        Surface(
             modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets.safeDrawing
-        ) { paddingValues ->
-            Surface(
-                modifier = Modifier
-                    .padding(paddingValues = paddingValues)
-                    .fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                NavigationRoot()
-            }
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NavigationRoot()
         }
     }
 }

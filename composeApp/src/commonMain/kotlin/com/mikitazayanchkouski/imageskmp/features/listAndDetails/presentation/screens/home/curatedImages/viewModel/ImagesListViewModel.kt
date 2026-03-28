@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onFailure
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
 import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringResource
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.CuratedImagesEvents.OnNavigateToImageDetails
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListEvents.OnNavigateToImageDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,8 +19,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CuratedImagesViewModel(
-    private val imagesRepository: ImagesRepository
+class ImagesListViewModel(
+    private val imagesRepository: ImagesRepository,
+    private val category: ImagesCategories
 ) : ViewModel() {
 
     /* Info note:
@@ -38,12 +40,12 @@ class CuratedImagesViewModel(
      * or a navigation event, that triggers screen switch, etc.
      */
 
-    private val eventChannel = Channel<CuratedImagesEvents>()
+    private val eventChannel = Channel<ImagesListEvents>()
     val events = eventChannel.receiveAsFlow()
 
     private var isInitialDataLoaded = false
 
-    private val _state = MutableStateFlow(value = CuratedImagesState())
+    private val _state = MutableStateFlow(value = ImagesListState())
 
     /* The sequence of events is the following:
      * 1) Collector joins: The UI starts collecting the state.
@@ -68,12 +70,16 @@ class CuratedImagesViewModel(
      */
     val state = combine(
         flow = _state,
-        flow2 = imagesRepository.getCuratedImagesFromTheDatabase()
+//        flow2 = imagesRepository.getImagesFromTheDatabase(category = category)
+        flow2 = imagesRepository.getImagesFromTheDatabase(category = ImagesCategories.ISLANDS)
     ) { currentImagesState, databaseDomainModels ->
         val imagesListAsUiModels = databaseDomainModels.map { domainModel ->
             domainModel.mapToUiModel()
         }
-        currentImagesState.copy(imagesList = imagesListAsUiModels)
+        currentImagesState.copy(
+            isDataReceivedSuccessfully = true,
+            imagesList = imagesListAsUiModels
+        )
     }
         /* We can also use init block of the view model,
          * but then, in test cases, there will be no way to initialize
@@ -92,12 +98,12 @@ class CuratedImagesViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000L),
-            initialValue = CuratedImagesState()
+            initialValue = ImagesListState()
         )
 
-    fun onUserAction(action: CuratedImagesActions) {
+    fun onUserAction(action: ImagesListActions) {
         when (action) {
-            is CuratedImagesActions.OnNavigateToImageDetails -> {
+            is ImagesListActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
                         element = OnNavigateToImageDetails(imageId = action.imageId)
@@ -105,8 +111,8 @@ class CuratedImagesViewModel(
                 }
             }
 
-            CuratedImagesActions.OnRefresh -> loadImages()
-            CuratedImagesActions.OnLoadCuratedImages -> loadImages()
+            ImagesListActions.OnRefresh -> loadImages()
+            ImagesListActions.OnLoadImages -> loadImages()
         }
     }
 
@@ -117,9 +123,9 @@ class CuratedImagesViewModel(
             }
 
             imagesRepository
-                .fetchCuratedImagesFromTheServer()
+//                .fetchImagesFromTheServer(category = category)
+                .fetchImagesFromTheServer(category = ImagesCategories.ISLANDS)
                 .onSuccess {
-                    println("SUCCESS fetchCuratedImagesFromTheServer()")
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
@@ -128,7 +134,6 @@ class CuratedImagesViewModel(
                     }
                 }
                 .onFailure { remoteDataError ->
-                    println("FAILURE fetchCuratedImagesFromTheServer(), remoteDataError: $remoteDataError")
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
@@ -136,7 +141,7 @@ class CuratedImagesViewModel(
                         )
                     }
                     eventChannel.send(
-                        element = CuratedImagesEvents.OnCuratedImagesLoadingFailed(
+                        element = ImagesListEvents.OnImagesLoadingFailed(
                             message = remoteDataError.mapToStringResource()
                         )
                     )

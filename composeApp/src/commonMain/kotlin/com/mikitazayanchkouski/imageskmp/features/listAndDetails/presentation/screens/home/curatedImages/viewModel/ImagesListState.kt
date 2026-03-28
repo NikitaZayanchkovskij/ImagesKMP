@@ -2,7 +2,7 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 
-data class CuratedImagesState(
+data class ImagesListState(
     val isLoading: Boolean = false,
     val isDataReceivedSuccessfully: Boolean = false,
     val imagesList: List<ImageUiModel> = emptyList()

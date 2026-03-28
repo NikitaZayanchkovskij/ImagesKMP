@@ -17,18 +17,14 @@ class RoomLocalImagesDataSource(
         category: ImagesCategories
     ) {
         imagesDataBase.imagesDao.upsertImagesAndSyncLocalAndRemoteCache(
-            serverImagesByCategory = serverImagesByCategory,
+            serverImages = serverImagesByCategory,
             category = category.inServerFormat
         )
     }
 
-    override suspend fun deleteImagesById(ids: List<Long>) {
-        imagesDataBase.imagesDao.deleteImagesById(ids = ids)
-    }
-
-    override fun getCuratedImages(): Flow<List<ImageDomainModel>> {
+    override fun getCachedImages(category: ImagesCategories): Flow<List<ImageDomainModel>> {
         return imagesDataBase.imagesDao.getImagesFromCacheByCategory(
-            imageCategory = ImagesCategories.CURATED.inServerFormat
+            imageCategory = category.inServerFormat
         ).map { listOfImageEntities ->
             listOfImageEntities.map { entity ->
                 entity.mapToDomainModel(category = entity.imageCategory)

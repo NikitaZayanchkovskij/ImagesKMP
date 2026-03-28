@@ -3,6 +3,7 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.reposit
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.CustomResult
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.DataError
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import kotlinx.coroutines.flow.Flow
 
@@ -13,21 +14,16 @@ interface ImagesRepository {
      * get the most recent data from the server,
      * and update the data in the database.
      *
-     * This updated will trigger the [getCuratedImagesFromTheDatabase] function,
+     * This updated will trigger the [getImagesFromTheDatabase] function,
      * which will emit changes to the UI layer.
      */
-    suspend fun fetchCuratedImagesFromTheServer(): CustomResult<ImagesListDomainModel, DataError.Remote>
+    suspend fun fetchImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
 
     /** Our UI and ViewModel will simply listen to this function,
      * to get the most up to date, offline first, images data.
      */
-    fun getCuratedImagesFromTheDatabase(): Flow<List<ImageDomainModel>>
+    fun getImagesFromTheDatabase(category: ImagesCategories): Flow<List<ImageDomainModel>>
 
-    /* ⬇︎ Functions bellow follow the same logic, as functions above. ⬆ */
-
-    //suspend fun fetchImagesByCategoryFromTheServer(category: String): CustomResult<ImagesListDomainModel, DataError.Remote>
-
-    //fun getImagesByCategoryFromTheDatabase(category: String): Flow<ImagesListDomainModel>
-
+    /** Used in the BookmarksScreen to get bookmarks. */
     fun getBookmarks(): Flow<List<ImageDomainModel>>
 }

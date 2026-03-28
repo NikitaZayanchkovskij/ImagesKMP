@@ -21,4 +21,9 @@
     <string name="error_remote_redirect">Something went wrong... Request redirection error.</string>
     <string name="error_remote_json_conversion">Failed to convert a JSON result.</string>
 
+    <string name="smiling_phone_icon_message">You have not loaded any images yet...</string>
+    <string name="smiling_search_icon_message">You have not searched any images yet..."</string>
+    <string name="content_description_smiling_phone_icon">Icon that says: "You have not loaded any images yet..."</string>
+    <string name="content_description_smiling_search_icon">Icon that says: "You have not searched any images yet..."</string>
+
 </resources>

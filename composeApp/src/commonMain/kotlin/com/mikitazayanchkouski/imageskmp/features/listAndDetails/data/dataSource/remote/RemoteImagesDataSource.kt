@@ -6,6 +6,5 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.I
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 
 interface RemoteImagesDataSource {
-    suspend fun getCuratedImages(): CustomResult<ImagesListDomainModel, DataError.Remote>
-    suspend fun getImagesByCategory(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
+    suspend fun loadImages(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
 }

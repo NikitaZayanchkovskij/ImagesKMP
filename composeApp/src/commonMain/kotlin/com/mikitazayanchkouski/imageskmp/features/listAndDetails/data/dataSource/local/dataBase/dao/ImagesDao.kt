@@ -23,26 +23,26 @@ interface ImagesDao {
         Можно использовать функцию ниже: getBookmarkedImagesIds()
         ) */
 
-    /** Remote list of images on the server periodically updates.
+    /* Remote list of images on the server periodically updates.
      * For example: each day it is a new list of images.
      * So, we need to keep our cached images, up to date with server ones.
      * This function helps to do this.
      */
     @Transaction
     suspend fun upsertImagesAndSyncLocalAndRemoteCache(
-        serverImagesByCategory: List<ImageEntity>,
+        serverImages: List<ImageEntity>,
         category: String
     ) {
-        if (serverImagesByCategory.isEmpty()) return
+        if (serverImages.isEmpty()) return
 
         /* TODO: Проверить случай, если изображения с какой-то категории
             были в закладках и обновилась информация для этой категории/вкладки,
             обновился кэш в базе данных - проверить, чтобы не пропали закладки.*/
 
-        upsertImagesToCache(images = serverImagesByCategory)
+        upsertImagesToCache(images = serverImages)
 
         val localImagesIds = getCachedImagesIdsByCategory(category = category)
-        val serverImagesIds = serverImagesByCategory.map { imageEntity -> imageEntity.imageId }
+        val serverImagesIds = serverImages.map { imageEntity -> imageEntity.imageId }
 
         /* outdatedIds - are images, that exist in the database, but not on the server.
          * These images we want to delete, to not clog the database.
@@ -65,8 +65,7 @@ interface ImagesDao {
     fun getImagesFromCacheByCategory(imageCategory: String): Flow<List<ImageEntity>>
 
     /* This might return multiple images, if the same ID is in two categories.
-     * Usually, we only want one for the Details screen.
-     * That's why LIMIT is here.
+     * We only want one for the Details screen - that's why LIMIT is here.
      */
     @Query("SELECT * FROM imageentity WHERE imageId = :imageId LIMIT 1")
     suspend fun getImageFromCacheById(imageId: Long): ImageEntity?
@@ -89,7 +88,7 @@ interface ImagesDao {
     @Query("DELETE FROM bookmarkedimageentity WHERE imageId = :imageId")
     suspend fun deleteImageFromBookmarks(imageId: Long)
 
-    /** This is needed for those images, that are been displayed on the main tabs.
+    /* This is needed for those images, that are been displayed on the main tabs.
      * (Nature, Islands etc.)
      * When the user clicks on the image to go to the DetailsScreen - I'm checking
      * the isInBookmarks field, to show the appropriate icon on the UI,

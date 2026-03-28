@@ -6,6 +6,7 @@ import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSucc
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.LocalImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.RemoteImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
+//import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
@@ -26,32 +27,24 @@ class OfflineFirstImagesRepository(
     private val localDataSource: LocalImagesDataSource
 ) : ImagesRepository {
 
-    override suspend fun fetchCuratedImagesFromTheServer(): CustomResult<ImagesListDomainModel, DataError.Remote> {
+    override suspend fun fetchImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote> {
         return remoteDataSource
-            .getCuratedImages()
+            .loadImages(category = category)
             .onSuccess { imagesListDomainModel ->
                 val imagesToInsertInTheDatabase = imagesListDomainModel.listOfImages.map { domainModel ->
-                        domainModel.mapToEntity(category = ImagesCategories.CURATED.inServerFormat)
+                        domainModel.mapToEntity()
                     }
 
                 localDataSource.upsertImagesAndSyncLocalAndRemoteCache(
                     serverImagesByCategory = imagesToInsertInTheDatabase,
-                    category = ImagesCategories.CURATED
+                    category = category
                 )
             }
     }
 
-    override fun getCuratedImagesFromTheDatabase(): Flow<List<ImageDomainModel>> {
-        return localDataSource.getCuratedImages()
+    override fun getImagesFromTheDatabase(category: ImagesCategories): Flow<List<ImageDomainModel>> {
+        return localDataSource.getCachedImages(category = category)
     }
-
-//    override suspend fun fetchImagesByCategoryFromTheServer(category: String): CustomResult<ImagesListDomainModel, DataError.Remote> {
-//        TODO("Not yet implemented")
-//    }
-
-//    override fun getImagesByCategoryFromTheDatabase(category: String): Flow<ImagesListDomainModel> {
-//        TODO("Not yet implemented")
-//    }
 
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {
         return localDataSource.getBookmarks()

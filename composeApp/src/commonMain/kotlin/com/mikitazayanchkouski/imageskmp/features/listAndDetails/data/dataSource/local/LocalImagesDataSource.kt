@@ -10,7 +10,6 @@ interface LocalImagesDataSource {
         serverImagesByCategory: List<ImageEntity>,
         category: ImagesCategories
     )
-    suspend fun deleteImagesById(ids: List<Long>)
-    fun getCuratedImages(): Flow<List<ImageDomainModel>>
+    fun getCachedImages(category: ImagesCategories): Flow<List<ImageDomainModel>>
     fun getBookmarks(): Flow<List<ImageDomainModel>>
 }

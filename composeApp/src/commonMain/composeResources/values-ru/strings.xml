@@ -21,4 +21,9 @@
     <string name="error_remote_redirect">Что-то пошло не так... Ошибка перенаправления запроса.</string>
     <string name="error_remote_json_conversion">Ошибка преобразования JSON результата.</string>
 
+    <string name="smiling_phone_icon_message">Вы ещё не загружали изображения...</string>
+    <string name="smiling_search_icon_message">Вы ещё не искали изображения..."</string>
+    <string name="content_description_smiling_phone_icon">Картинка с сообщением: "Вы ещё не загружали изображения..."</string>
+    <string name="content_description_smiling_search_icon">Картинка с сообщением: "Вы ещё не искали изображения..."</string>
+
 </resources>

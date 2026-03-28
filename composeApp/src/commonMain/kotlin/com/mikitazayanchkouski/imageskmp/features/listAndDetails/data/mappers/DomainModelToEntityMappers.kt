@@ -5,7 +5,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
 
-fun ImageDomainModel.mapToEntity(category: String): ImageEntity {
+fun ImageDomainModel.mapToEntity(): ImageEntity {
     return ImageEntity(
         imageUniqueKey = "$imageId$imageCategory",
         imageId = imageId,

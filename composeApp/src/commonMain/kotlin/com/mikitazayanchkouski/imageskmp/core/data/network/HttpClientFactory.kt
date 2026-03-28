@@ -1,7 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.core.data.network
 
 import com.mikitazayanchkouski.imageskmp.core.domain.logging.PexelsLogger
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.NetworkConstants
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.ListAndDetailsFeatureNetworkConstants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
@@ -48,7 +48,7 @@ class HttpClientFactory(
                     key = HttpHeaders.Authorization,
                     value = CoreNetworkConstants.API_KEY
                 )
-                url(urlString = NetworkConstants.BASE_URL)
+                url(urlString = ListAndDetailsFeatureNetworkConstants.BASE_URL)
                 contentType(type = ContentType.Application.Json)
             }
         }
