@@ -44,6 +44,28 @@ class CuratedImagesViewModel(
     private var isInitialDataLoaded = false
 
     private val _state = MutableStateFlow(value = CuratedImagesState())
+
+    /* The sequence of events is the following:
+     * 1) Collector joins: The UI starts collecting the state.
+     * 2) Room triggers immediately:
+     * Because getCuratedImagesFromTheDatabase() returns a Flow from Room,
+     * Room immediately emits whatever is currently in the database (even if it's from yesterday).
+     * 3) onStart runs: loadImages() is called.
+     * 4) If network fails:
+     * fetchCuratedImagesFromTheServer() returns a Failure, because there is no internet.
+     * If not - returns a Success.
+     * 5) UI state updates:
+     * I'm updating _state parameters: isLoading and isDataReceivedSuccessfully.
+     * 6) Combine triggers again:
+     * because _state changed, the combine block runs again.
+     * It takes the Failure or Success UI state, and merges it with
+     * the existing data, that was already in the database.
+     * Result:
+     * The user sees either the old cached images, from the previous successful
+     * network call, if current call fails
+     * (even though a snack bar from the eventChannel might pop up saying "No Internet"),
+     * or the up-to-date new ones, that are just been fetched.
+     */
     val state = combine(
         flow = _state,
         flow2 = imagesRepository.getCuratedImagesFromTheDatabase()
@@ -54,16 +76,15 @@ class CuratedImagesViewModel(
         currentImagesState.copy(imagesList = imagesListAsUiModels)
     }
         /* We can also use init block of the view model,
-         * but then in test cases, there will be no way to initialize
+         * but then, in test cases, there will be no way to initialize
          * the view model, without initializing the data loading.
          *
-         * This onStart block is called when the first collector appears.
-         * For example when we call on the screen:
+         * This onStart block is triggered, when the first collector appears.
+         * For example, when we call on the screen:
          * val imagesState by viewModel.state.collectAsStateWithLifecycle()
          */
         .onStart {
             if (!isInitialDataLoaded) {
-//                println("Load images...")
                 loadImages()
                 isInitialDataLoaded = true
             }
@@ -79,9 +100,7 @@ class CuratedImagesViewModel(
             is CuratedImagesActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
-                        element = OnNavigateToImageDetails(
-                            imageId = action.imageId
-                        )
+                        element = OnNavigateToImageDetails(imageId = action.imageId)
                     )
                 }
             }

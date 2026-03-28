@@ -2,9 +2,11 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSourc
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.ImagesDatabase
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.JoinBookmarkWithImage
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RoomLocalImagesDataSource(
     private val imagesDataBase: ImagesDatabase
@@ -16,7 +18,7 @@ class RoomLocalImagesDataSource(
     ) {
         imagesDataBase.imagesDao.upsertImagesAndSyncLocalAndRemoteCache(
             serverImagesByCategory = serverImagesByCategory,
-            category = category
+            category = category.inServerFormat
         )
     }
 
@@ -24,13 +26,21 @@ class RoomLocalImagesDataSource(
         imagesDataBase.imagesDao.deleteImagesById(ids = ids)
     }
 
-    override fun getCuratedImages(): Flow<List<ImageEntity>> {
+    override fun getCuratedImages(): Flow<List<ImageDomainModel>> {
         return imagesDataBase.imagesDao.getImagesFromCacheByCategory(
             imageCategory = ImagesCategories.CURATED.inServerFormat
-        )
+        ).map { listOfImageEntities ->
+            listOfImageEntities.map { entity ->
+                entity.mapToDomainModel(category = entity.imageCategory)
+            }
+        }
     }
 
-    override fun getBookmarks(): Flow<List<JoinBookmarkWithImage>> {
-        return imagesDataBase.imagesDao.getBookmarkedImages()
+    override fun getBookmarks(): Flow<List<ImageDomainModel>> {
+        return imagesDataBase.imagesDao.getBookmarkedImages().map { listOfEntities ->
+            listOfEntities.map { entity ->
+                entity.mapToDomainModel()
+            }
+        }
     }
 }

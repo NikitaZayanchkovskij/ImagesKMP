@@ -2,18 +2,15 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.repositor
 
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.CustomResult
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.DataError
-import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.map
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.LocalImagesDataSource
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.RemoteImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 /** Offline first repository, that follows the Single Source of Truth principal.
  *
@@ -32,26 +29,20 @@ class OfflineFirstImagesRepository(
     override suspend fun fetchCuratedImagesFromTheServer(): CustomResult<ImagesListDomainModel, DataError.Remote> {
         return remoteDataSource
             .getCuratedImages()
-            .onSuccess { imagesListDto ->
-                val imagesToInsertInTheDatabase = imagesListDto.photos.map { imageDto ->
-                    imageDto.mapToEntity(category = ImagesCategories.CURATED.inServerFormat)
-                }
+            .onSuccess { imagesListDomainModel ->
+                val imagesToInsertInTheDatabase = imagesListDomainModel.listOfImages.map { domainModel ->
+                        domainModel.mapToEntity(category = ImagesCategories.CURATED.inServerFormat)
+                    }
 
                 localDataSource.upsertImagesAndSyncLocalAndRemoteCache(
                     serverImagesByCategory = imagesToInsertInTheDatabase,
-                    category = ImagesCategories.CURATED.inServerFormat
+                    category = ImagesCategories.CURATED
                 )
-            }.map { imagesListDto ->
-                imagesListDto.mapToDomainModel(category = ImagesCategories.CURATED.inServerFormat)
             }
     }
 
     override fun getCuratedImagesFromTheDatabase(): Flow<List<ImageDomainModel>> {
-        return localDataSource.getCuratedImages().map { listOfImageEntities ->
-            listOfImageEntities.map { imageEntity ->
-                imageEntity.mapToDomainModel(category = ImagesCategories.CURATED.inServerFormat)
-            }
-        }
+        return localDataSource.getCuratedImages()
     }
 
 //    override suspend fun fetchImagesByCategoryFromTheServer(category: String): CustomResult<ImagesListDomainModel, DataError.Remote> {
@@ -63,10 +54,6 @@ class OfflineFirstImagesRepository(
 //    }
 
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {
-        return localDataSource.getBookmarks().map { bookmarksList ->
-            bookmarksList.map { bookmark ->
-                bookmark.mapToDomainModel()
-            }
-        }
+        return localDataSource.getBookmarks()
     }
 }
