@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
-import com.mikitazayanchkouski.imageskmp.navigation.NavigationRoot
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.navigation.NavigationRoot
 
 @Composable
 fun App() {

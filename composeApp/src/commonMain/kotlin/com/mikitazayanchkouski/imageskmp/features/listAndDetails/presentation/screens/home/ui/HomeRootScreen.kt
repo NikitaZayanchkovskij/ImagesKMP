@@ -1,9 +1,10 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.ui
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,14 +42,14 @@ import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListActions
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListEvents
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListState
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListViewModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListState
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
 import imageskmp.composeapp.generated.resources.Res
 import imageskmp.composeapp.generated.resources.content_description_smiling_phone_icon
 import imageskmp.composeapp.generated.resources.icon_image_placeholder
-import imageskmp.composeapp.generated.resources.smiling_phone_icon
+import imageskmp.composeapp.generated.resources.icon_smiling_phone
 import imageskmp.composeapp.generated.resources.smiling_phone_icon_message
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -58,7 +59,8 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun CuratedImagesRoot(
+fun HomeRoot(
+    paddingValuesFromRootBottomBarInScaffold: PaddingValues,
     viewModel: ImagesListViewModel = koinViewModel(
         key = ImagesCategories.CURATED.name,
         parameters = { parametersOf(ImagesCategories.CURATED) }
@@ -89,8 +91,10 @@ fun CuratedImagesRoot(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = Modifier
+            .padding(paddingValues = paddingValuesFromRootBottomBarInScaffold)
+            .fillMaxSize(),
+        contentWindowInsets = WindowInsets.safeDrawing, // To safely handle display cutouts
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState) { snackBarData ->
                 Snackbar(
@@ -141,7 +145,7 @@ private fun CuratedImagesScreen(
                 Image(
                     modifier = Modifier.size(size = 200.dp),
                     painter = painterResource(
-                        resource = Res.drawable.smiling_phone_icon
+                        resource = Res.drawable.icon_smiling_phone
                     ),
                     contentDescription = stringResource(
                         resource = Res.string.content_description_smiling_phone_icon

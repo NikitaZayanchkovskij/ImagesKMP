@@ -1,7 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.di
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel.ImagesListViewModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

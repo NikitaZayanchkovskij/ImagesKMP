@@ -26,4 +26,15 @@
     <string name="content_description_smiling_phone_icon">Картинка с сообщением: "Вы ещё не загружали изображения..."</string>
     <string name="content_description_smiling_search_icon">Картинка с сообщением: "Вы ещё не искали изображения..."</string>
 
+    <!-- Strings for BottomBarDestinations -->
+    <string name="home_title">Главная</string>
+    <string name="home_selected_icon_description">Главный экран открыт</string>
+    <string name="home_unselected_icon_description">Главный экран закрыт</string>
+    <string name="search_title">Поиск</string>
+    <string name="search_selected_icon_description">Экран поиска открыт</string>
+    <string name="search_unselected_icon_description">Экран поиска закрыт</string>
+    <string name="bookmarks_title">Закладки</string>
+    <string name="bookmarks_selected_icon_description">Экран закладок открыт</string>
+    <string name="bookmarks_unselected_icon_description">Экран закладок закрыт</string>
+
 </resources>

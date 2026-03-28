@@ -1,6 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -13,7 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
 
 @Composable
-fun SearchRoot() {
+fun SearchRoot(
+    paddingValues: PaddingValues,
+    onNavigateToImageDetails: (Long) -> Unit
+) {
     SearchScreen()
 }
 

@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.curatedImages.viewModel
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 

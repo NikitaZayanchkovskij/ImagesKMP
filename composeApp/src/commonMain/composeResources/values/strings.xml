@@ -26,4 +26,15 @@
     <string name="content_description_smiling_phone_icon">Icon that says: "You have not loaded any images yet..."</string>
     <string name="content_description_smiling_search_icon">Icon that says: "You have not searched any images yet..."</string>
 
+    <!-- Strings for BottomBarDestinations -->
+    <string name="home_title">Home</string>
+    <string name="home_selected_icon_description">Home destination is selected</string>
+    <string name="home_unselected_icon_description">Home destination is unselected</string>
+    <string name="search_title">Search</string>
+    <string name="search_selected_icon_description">Search destination is selected</string>
+    <string name="search_unselected_icon_description">Search destination is unselected</string>
+    <string name="bookmarks_title">Bookmarks</string>
+    <string name="bookmarks_selected_icon_description">Bookmarks destination is selected</string>
+    <string name="bookmarks_unselected_icon_description">Bookmarks destination is unselected</string>
+
 </resources>

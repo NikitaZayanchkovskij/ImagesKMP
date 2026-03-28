@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 sealed interface NavGraphRoutes {
     @Serializable
-    data object Graph: NavGraphRoutes
+    data object RootScreen: NavGraphRoutes
     @Serializable
     data object HomeScreen: NavGraphRoutes
     @Serializable
