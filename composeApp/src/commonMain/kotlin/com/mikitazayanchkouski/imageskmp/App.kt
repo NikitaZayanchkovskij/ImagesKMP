@@ -8,17 +8,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.navigation.NavigationRoot
+import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.navigation.RootScreenNavigationGraph
 
 @Composable
 fun App() {
-    PexelsTheme {
+    ImagesAppTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            NavigationRoot()
+            RootScreenNavigationGraph()
         }
     }
 }
@@ -39,7 +39,7 @@ fun App() {
 )
 @Composable
 private fun AppPreview() {
-    PexelsTheme {
+    ImagesAppTheme {
         Surface {
             App()
         }

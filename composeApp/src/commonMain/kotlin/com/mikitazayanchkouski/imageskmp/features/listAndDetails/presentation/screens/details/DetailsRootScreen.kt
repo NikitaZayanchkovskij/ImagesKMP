@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
+import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 
 @Composable
 fun DetailsRoot(
@@ -59,7 +59,7 @@ private fun DetailsScreen(
 )
 @Composable
 private fun CuratedImagesScreenPreview() {
-    PexelsTheme {
+    ImagesAppTheme {
         Surface {
             DetailsScreen(
                 imageId = 123,

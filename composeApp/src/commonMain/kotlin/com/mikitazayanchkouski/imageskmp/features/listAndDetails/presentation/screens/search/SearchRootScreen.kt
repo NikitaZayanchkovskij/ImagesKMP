@@ -1,6 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -11,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
+import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 
 @Composable
 fun SearchRoot(
@@ -23,9 +24,10 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen() {
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "SearchScreen")
     }
@@ -47,7 +49,7 @@ private fun SearchScreen() {
 )
 @Composable
 private fun CuratedImagesScreenPreview() {
-    PexelsTheme {
+    ImagesAppTheme {
         Surface {
             SearchScreen()
         }

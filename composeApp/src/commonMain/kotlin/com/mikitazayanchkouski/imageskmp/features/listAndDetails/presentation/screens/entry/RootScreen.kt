@@ -28,7 +28,5 @@ fun RootScreen(
                 )
             }
         )
-
     }
-
 }

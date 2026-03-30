@@ -10,7 +10,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.entry.RootScreen
 
 @Composable
-fun NavigationRoot(
+fun RootScreenNavigationGraph(
     modifier: Modifier = Modifier
 ) {
     val navHostController = rememberNavController()

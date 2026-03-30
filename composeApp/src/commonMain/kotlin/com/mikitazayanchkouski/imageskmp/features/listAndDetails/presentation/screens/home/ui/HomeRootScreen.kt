@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.mikitazayanchkouski.imageskmp.core.presentation.theme.PexelsTheme
+import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
@@ -207,7 +207,7 @@ private fun CuratedImagesScreen(
 )
 @Composable
 private fun CuratedImagesScreenPreview() {
-    PexelsTheme {
+    ImagesAppTheme {
         Surface {
             CuratedImagesScreen(
                 imagesState = ImagesListState(

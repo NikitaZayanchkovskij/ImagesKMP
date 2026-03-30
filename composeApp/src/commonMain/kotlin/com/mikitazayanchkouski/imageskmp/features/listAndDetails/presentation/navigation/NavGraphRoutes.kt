@@ -2,6 +2,7 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.n
 
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface NavGraphRoutes {
     @Serializable
     data object RootScreen: NavGraphRoutes
