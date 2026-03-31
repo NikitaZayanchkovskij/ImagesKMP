@@ -37,8 +37,18 @@
     <string name="bookmarks_selected_icon_description">Bookmarks destination is selected</string>
     <string name="bookmarks_unselected_icon_description">Bookmarks destination is unselected</string>
 
+    <!-- Top app bar titles -->
     <string name="home_screen_top_app_bar_title">Inspirational images</string>
     <string name="search_screen_top_app_bar_title">Search for images</string>
     <string name="bookmarks_screen_top_app_bar_title">Bookmarks</string>
+
+    <!-- Images categories titles for the UI -->
+    <string name="curated_category">Curated</string>
+    <string name="islands_category">Islands</string>
+    <string name="nature_category">Nature</string>
+    <string name="outdoors_category">Outdoors</string>
+    <string name="sunny_morning_category">Sunny morning</string>
+    <string name="ocean_category">Ocean</string>
+    <string name="space_category">Space</string>
 
 </resources>

@@ -1,11 +1,9 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,10 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.components.ImagesListCardItem
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen.components.ImagesListCardItem
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListState
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
@@ -58,13 +53,13 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun HomeRoot(
-    paddingValuesFromRootBottomBarInScaffold: PaddingValues,
+fun ImagesListRoot(
     viewModel: ImagesListViewModel = koinViewModel(
+        // TODO: CHANGE CATEGORY !!!
         key = ImagesCategories.CURATED.name,
         parameters = { parametersOf(ImagesCategories.CURATED) }
     ),
-    onNavigateToImageDetails: (Long) -> Unit
+//    onNavigateToImageDetails: (Long) -> Unit
 ) {
     val imagesState by viewModel.state.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -74,7 +69,7 @@ fun HomeRoot(
     ObserveAsOneTimeEvents(flow = viewModel.events) { event ->
         when (event) {
             is ImagesListEvents.OnNavigateToImageDetails -> {
-                onNavigateToImageDetails(event.imageId)
+//                onNavigateToImageDetails(event.imageId)
             }
 
             is ImagesListEvents.OnImagesLoadingFailed -> {
@@ -91,7 +86,7 @@ fun HomeRoot(
 
     Scaffold(
         modifier = Modifier
-            .padding(paddingValues = paddingValuesFromRootBottomBarInScaffold)
+//            .padding(paddingValues = paddingValuesFromRootBottomBarInScaffold)
             .fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing, // To safely handle display cutouts
         snackbarHost = {
@@ -105,21 +100,15 @@ fun HomeRoot(
             }
         }
     ) { paddingValues ->
-        CuratedImagesScreen(
-//            modifier = Modifier.padding(
-//                paddingValues = paddingValues // To safely support Edge to Edge
-//            ),
-            imagesState = imagesState,
-            userAction = viewModel::onUserAction
-        )
+        ImagesListScreen(imagesState = imagesState)
     }
+
+//    ImagesListScreen(imagesList = imagesList)
 }
 
 @Composable
-private fun CuratedImagesScreen(
-//    modifier: Modifier = Modifier,
+private fun ImagesListScreen(
     imagesState: ImagesListState,
-    userAction: (ImagesListActions) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -163,9 +152,8 @@ private fun CuratedImagesScreen(
         } else {
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
                     .fillMaxSize()
-                    .background(color = colorScheme.background),
+                    .padding(horizontal = 10.dp),
                 columns = StaggeredGridCells.Fixed(count = 2),
                 verticalItemSpacing = 10.dp,
                 horizontalArrangement = Arrangement.spacedBy(
@@ -203,43 +191,9 @@ private fun CuratedImagesScreen(
     device = Devices.PIXEL_TABLET
 )
 @Composable
-private fun CuratedImagesScreenPreview() {
+private fun ImagesListScreenPreview() {
     ImagesAppTheme {
         Surface {
-            CuratedImagesScreen(
-                imagesState = ImagesListState(
-                    isLoading = false,
-                    isDataReceivedSuccessfully = true,
-//                    imagesList = emptyList()
-                    imagesList = (1..10).map { index ->
-                        ImageUiModel(
-                            imageId = index.toLong(),
-                            imageCategory = "CURATED",
-                            isInBookmarks = true,
-                            width = 3024,
-                            height = 3024,
-                            imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
-                            photographerName = "Joey Farina",
-                            photographerUrl = "https://www.pexels.com/@joey",
-                            photographerId = 680589,
-                            avgColor = "#978E82",
-                            imageResolutions = ImageSrcUiModel(
-                                original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
-                                large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                                large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-                                medium = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350",
-                                small = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130",
-                                portrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
-                                landscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-                                tiny = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
-                            ),
-                            liked = false,
-                            description = "Brown Rocks During Golden Hour"
-                        )
-                    }
-                ),
-                userAction = { action -> }
-            )
         }
     }
 }

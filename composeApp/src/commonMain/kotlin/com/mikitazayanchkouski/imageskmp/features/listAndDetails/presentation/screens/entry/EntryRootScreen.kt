@@ -23,7 +23,7 @@ import imageskmp.composeapp.generated.resources.home_screen_top_app_bar_title
 import imageskmp.composeapp.generated.resources.search_screen_top_app_bar_title
 
 @Composable
-fun RootScreen(
+fun EntryRootScreen(
     modifier: Modifier = Modifier,
     rootScreenNavHostController: NavHostController
 ) {
@@ -77,10 +77,10 @@ fun RootScreen(
     device = Devices.PIXEL_TABLET
 )
 @Composable
-private fun RootScreenPreview() {
+private fun EntryRootScreenPreview() {
     ImagesAppTheme {
         Surface {
-            RootScreen(rootScreenNavHostController = rememberNavController())
+            EntryRootScreen(rootScreenNavHostController = rememberNavController())
         }
     }
 }

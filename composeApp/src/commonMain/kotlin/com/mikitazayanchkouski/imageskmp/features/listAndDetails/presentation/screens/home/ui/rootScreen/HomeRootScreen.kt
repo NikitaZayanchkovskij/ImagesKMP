@@ -1,0 +1,109 @@
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.rootScreen
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.AndroidUiModes
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen.ImagesListRoot
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun HomeRoot(
+    paddingValuesFromRootBottomBarInScaffold: PaddingValues,
+) {
+    HomeScreen(paddingValues = paddingValuesFromRootBottomBarInScaffold)
+}
+
+@Composable
+private fun HomeScreen(
+    paddingValues: PaddingValues
+) {
+    val pagerState = rememberPagerState { ImagesCategories.entries.size }
+    val currentTabIndex = pagerState.currentPage
+    val scope = rememberCoroutineScope()
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
+
+    Column(
+        modifier = Modifier
+            .padding(paddingValues = paddingValues)
+            .fillMaxSize()
+            .background(color = colorScheme.background)
+    ) {
+        PrimaryScrollableTabRow(
+            modifier = Modifier.fillMaxWidth(),
+            selectedTabIndex = currentTabIndex,
+            containerColor = colorScheme.background,
+            edgePadding = 0.dp,
+        ) {
+            ImagesCategories.entries.forEachIndexed { index, category ->
+                val isTabSelected = (index == currentTabIndex)
+
+                Tab(
+                    selected = isTabSelected,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(page = index)
+                        }
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(resource = category.titleForTheUi),
+                            color = if (isTabSelected) colorScheme.primary else colorScheme.onBackground,
+                            style = typography.titleSmall
+                        )
+                    }
+                )
+            }
+        }
+        HorizontalPager(
+            beyondViewportPageCount = 3,
+            state = pagerState
+        ) { tabIndex ->
+            ImagesListRoot()
+        }
+    }
+}
+
+
+@Preview(
+    name = "Portrait light theme",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_9
+)
+@Preview(
+    name = "Tablet dark theme",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_TABLET
+)
+@Composable
+private fun HomeScreenPreview() {
+    ImagesAppTheme {
+        Surface {
+            HomeScreen(paddingValues = PaddingValues(all = 0.dp))
+        }
+    }
+}

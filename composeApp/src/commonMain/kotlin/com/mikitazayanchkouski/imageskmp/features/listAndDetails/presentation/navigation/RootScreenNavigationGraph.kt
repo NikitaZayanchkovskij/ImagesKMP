@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.DetailsRoot
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.entry.RootScreen
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.entry.EntryRootScreen
 
 @Composable
 fun RootScreenNavigationGraph(
@@ -20,7 +20,7 @@ fun RootScreenNavigationGraph(
         startDestination = NavGraphRoutes.RootScreen
     ) {
         composable<NavGraphRoutes.RootScreen> {
-            RootScreen(rootScreenNavHostController = navHostController)
+            EntryRootScreen(rootScreenNavHostController = navHostController)
         }
         composable<NavGraphRoutes.DetailsScreen> { backStackEntry ->
             val imageId = backStackEntry.toRoute<NavGraphRoutes.DetailsScreen>().imageId

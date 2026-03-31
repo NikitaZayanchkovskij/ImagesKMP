@@ -37,8 +37,18 @@
     <string name="bookmarks_selected_icon_description">Экран закладок открыт</string>
     <string name="bookmarks_unselected_icon_description">Экран закладок закрыт</string>
 
+    <!-- Top app bar titles -->
     <string name="home_screen_top_app_bar_title">Вдохновляющие изображения</string>
     <string name="search_screen_top_app_bar_title">Найдите изображения</string>
     <string name="bookmarks_screen_top_app_bar_title">Закладки</string>
+
+    <!-- Images categories titles for the UI -->
+    <string name="curated_category">Популярные</string>
+    <string name="islands_category">Острова</string>
+    <string name="nature_category">Природа</string>
+    <string name="outdoors_category">На открытом воздухе</string>
+    <string name="sunny_morning_category">Солнечное утро</string>
+    <string name="ocean_category">Океан</string>
+    <string name="space_category">Космос</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.components
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -37,7 +37,8 @@ fun BottomNavigationBar(
         containerColor = colorScheme.surface
     ) {
         BottomNavigationBarDestinations.entries.forEach { destination ->
-            val isTabSelected = currentDestination?.hasRoute(route = destination.navigationRoute::class) ?: false
+            val isTabSelected =
+                currentDestination?.hasRoute(route = destination.navigationRoute::class) ?: false
 
             NavigationBarItem(
                 selected = isTabSelected,
@@ -68,11 +69,11 @@ fun BottomNavigationBar(
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colorScheme.secondary,
-                    selectedTextColor = colorScheme.onSurfaceVariant,
-                    indicatorColor = colorScheme.tertiary,
-                    unselectedIconColor = colorScheme.onSurfaceVariant,
-                    unselectedTextColor = colorScheme.onSurfaceVariant
+                    selectedIconColor = colorScheme.primary,
+                    selectedTextColor = colorScheme.onSurface,
+                    indicatorColor = colorScheme.primary.copy(alpha = 0.2f),
+                    unselectedIconColor = colorScheme.onSurface,
+                    unselectedTextColor = colorScheme.onSurface
                 )
             )
         }

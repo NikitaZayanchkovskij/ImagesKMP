@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.BookmarksRoot
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.HomeRoot
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.rootScreen.HomeRoot
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.SearchRoot
 
 @Composable
@@ -21,10 +21,7 @@ fun BottomNavigationBarGraph(
     ) {
         composable<NavGraphRoutes.HomeScreen> {
             HomeRoot(
-                paddingValuesFromRootBottomBarInScaffold = paddingValues,
-                onNavigateToImageDetails = { imageId ->
-                    onNavigateToImageDetails(imageId)
-                }
+                paddingValuesFromRootBottomBarInScaffold = paddingValues
             )
         }
         composable<NavGraphRoutes.SearchScreen> {

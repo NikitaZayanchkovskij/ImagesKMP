@@ -8,26 +8,19 @@ val LightColorScheme = lightColorScheme(
     onPrimary = lightThemeOnPrimary,
     secondary = lightThemeSecondary,
     onSecondary = lightThemeOnSecondary,
-    tertiary = lightThemeTertiary,
     background = lightThemeBackground,
     onBackground = lightThemeOnBackground,
     surface = lightThemeSurface,
-    onSurface = lightThemeOnSurface,
-    onSurfaceVariant = lightThemeOnSurfaceVariant
-//    surfaceVariant = lightThemeSurfaceVariant,
-//    onSurfaceVariant = lightThemeOnSurfaceVariant
+    onSurface = lightThemeOnSurface
 )
 
 val DarkColorScheme = darkColorScheme(
     primary = darkThemePrimary,
     onPrimary = darkThemeOnPrimary,
     secondary = darkThemeSecondary,
+    onSecondary = darkThemeOnSecondary,
     background = darkThemeBackground,
     onBackground = darkThemeOnBackground,
     surface = darkThemeSurface,
-    onSurface = darkThemeOnSurface,
-    onSurfaceVariant = darkThemeOnSurfaceVariant,
-    tertiary = darkThemeTertiary
-//    surfaceVariant = darkThemeSurfaceVariant,
-//    onSurfaceVariant = darkThemeOnSurfaceVariant
+    onSurface = darkThemeOnSurface
 )
