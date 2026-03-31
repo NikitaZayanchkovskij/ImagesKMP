@@ -13,7 +13,8 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 fun BottomNavigationBarGraph(
     paddingValues: PaddingValues,
     navController: NavHostController,
-    onNavigateToImageDetails: (Long) -> Unit
+    onNavigateToImageDetails: (Long) -> Unit,
+    onShowSnackBarMessage: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -21,12 +22,14 @@ fun BottomNavigationBarGraph(
     ) {
         composable<NavGraphRoutes.HomeScreen> {
             HomeRoot(
-                paddingValuesFromRootBottomBarInScaffold = paddingValues
+                paddingValuesFromEntryRootScaffold = paddingValues,
+                onNavigateToImageDetails = onNavigateToImageDetails,
+                onShowSnackBarMessage = onShowSnackBarMessage
             )
         }
         composable<NavGraphRoutes.SearchScreen> {
             SearchRoot(
-                paddingValues = paddingValues,
+                paddingValuesFromRootScaffold = paddingValues,
                 onNavigateToImageDetails = { imageId ->
                     onNavigateToImageDetails(imageId)
                 }
@@ -34,7 +37,7 @@ fun BottomNavigationBarGraph(
         }
         composable<NavGraphRoutes.BookmarksScreen> {
             BookmarksRoot(
-                paddingValues = paddingValues,
+                paddingValuesFromRootScaffold = paddingValues,
                 onNavigateToImageDetails = { imageId ->
                     onNavigateToImageDetails(imageId)
                 }

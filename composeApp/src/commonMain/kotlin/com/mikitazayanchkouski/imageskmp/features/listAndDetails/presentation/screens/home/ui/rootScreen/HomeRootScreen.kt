@@ -28,14 +28,22 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeRoot(
-    paddingValuesFromRootBottomBarInScaffold: PaddingValues,
+    paddingValuesFromEntryRootScaffold: PaddingValues,
+    onNavigateToImageDetails: (Long) -> Unit,
+    onShowSnackBarMessage: (String) -> Unit
 ) {
-    HomeScreen(paddingValues = paddingValuesFromRootBottomBarInScaffold)
+    HomeScreen(
+        paddingValues = paddingValuesFromEntryRootScaffold,
+        onNavigateToImageDetails = onNavigateToImageDetails,
+        onShowSnackBarMessage = onShowSnackBarMessage
+    )
 }
 
 @Composable
 private fun HomeScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onNavigateToImageDetails: (Long) -> Unit,
+    onShowSnackBarMessage: (String) -> Unit
 ) {
     val pagerState = rememberPagerState { ImagesCategories.entries.size }
     val currentTabIndex = pagerState.currentPage
@@ -53,7 +61,7 @@ private fun HomeScreen(
             modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = currentTabIndex,
             containerColor = colorScheme.background,
-            edgePadding = 0.dp,
+            edgePadding = 10.dp,
         ) {
             ImagesCategories.entries.forEachIndexed { index, category ->
                 val isTabSelected = (index == currentTabIndex)
@@ -79,7 +87,15 @@ private fun HomeScreen(
             beyondViewportPageCount = 3,
             state = pagerState
         ) { tabIndex ->
-            ImagesListRoot()
+            ImagesListRoot(
+                category = ImagesCategories.entries[tabIndex],
+                onNavigateToImageDetails = { imageId ->
+                    onNavigateToImageDetails(imageId)
+                },
+                onShowSnackBarMessage = { message ->
+                    onShowSnackBarMessage(message)
+                }
+            )
         }
     }
 }
@@ -103,7 +119,11 @@ private fun HomeScreen(
 private fun HomeScreenPreview() {
     ImagesAppTheme {
         Surface {
-            HomeScreen(paddingValues = PaddingValues(all = 0.dp))
+            HomeScreen(
+                paddingValues = PaddingValues(all = 0.dp),
+                onNavigateToImageDetails = { imageId -> },
+                onShowSnackBarMessage = { message -> }
+            )
         }
     }
 }

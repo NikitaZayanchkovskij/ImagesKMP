@@ -17,7 +17,6 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 @Composable
 fun DetailsRoot(
     imageId: Long,
-    // Временно, потом поменять на action
     onNavigateBackToListScreen: () -> Unit
 ) {
     DetailsScreen(

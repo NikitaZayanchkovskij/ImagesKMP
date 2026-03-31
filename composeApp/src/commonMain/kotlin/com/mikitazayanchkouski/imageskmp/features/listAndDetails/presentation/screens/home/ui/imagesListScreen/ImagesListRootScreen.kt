@@ -4,27 +4,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +30,7 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen.components.ImagesListCardItem
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListState
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
@@ -54,61 +47,42 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ImagesListRoot(
+    category: ImagesCategories,
     viewModel: ImagesListViewModel = koinViewModel(
-        // TODO: CHANGE CATEGORY !!!
-        key = ImagesCategories.CURATED.name,
-        parameters = { parametersOf(ImagesCategories.CURATED) }
+        key = category.name,
+        parameters = { parametersOf(category) }
     ),
-//    onNavigateToImageDetails: (Long) -> Unit
+    onNavigateToImageDetails: (Long) -> Unit,
+    onShowSnackBarMessage: (String) -> Unit
 ) {
     val imagesState by viewModel.state.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val colorScheme = MaterialTheme.colorScheme
 
     ObserveAsOneTimeEvents(flow = viewModel.events) { event ->
         when (event) {
             is ImagesListEvents.OnNavigateToImageDetails -> {
-//                onNavigateToImageDetails(event.imageId)
+                onNavigateToImageDetails(event.imageId)
             }
 
             is ImagesListEvents.OnImagesLoadingFailed -> {
                 scope.launch {
                     val errorMessageAsString = getString(resource = event.message)
-                    snackBarHostState.showSnackbar(
-                        message = errorMessageAsString,
-                        duration = SnackbarDuration.Long
-                    )
+                    onShowSnackBarMessage(errorMessageAsString)
                 }
             }
         }
     }
 
-    Scaffold(
-        modifier = Modifier
-//            .padding(paddingValues = paddingValuesFromRootBottomBarInScaffold)
-            .fillMaxSize(),
-        contentWindowInsets = WindowInsets.safeDrawing, // To safely handle display cutouts
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState) { snackBarData ->
-                Snackbar(
-                    snackbarData = snackBarData,
-                    shape = RoundedCornerShape(size = 20.dp),
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary
-                )
-            }
-        }
-    ) { paddingValues ->
-        ImagesListScreen(imagesState = imagesState)
-    }
-
-//    ImagesListScreen(imagesList = imagesList)
+    ImagesListScreen(
+        imagesState = imagesState,
+        userAction = viewModel::onUserAction
+    )
 }
 
 @Composable
 private fun ImagesListScreen(
     imagesState: ImagesListState,
+    userAction: (ImagesListActions) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -159,16 +133,23 @@ private fun ImagesListScreen(
                 horizontalArrangement = Arrangement.spacedBy(
                     space = 10.dp,
                     alignment = Alignment.CenterHorizontally
-                )
+                ),
+                contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
             ) {
                 items(
                     items = imagesState.imagesList,
                     key = { image -> image.imageId }
                 ) { imageUiModel ->
                     ImagesListCardItem(
+                        imageId = imageUiModel.imageId,
                         imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
                         imageDescription = imageUiModel.description,
-                        photographerName = imageUiModel.photographerName
+                        photographerName = imageUiModel.photographerName,
+                        onImageClick = { imageId ->
+                            userAction(
+                                ImagesListActions.OnNavigateToImageDetails(imageId = imageId)
+                            )
+                        }
                     )
                 }
             }
