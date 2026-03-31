@@ -37,4 +37,8 @@
     <string name="bookmarks_selected_icon_description">Экран закладок открыт</string>
     <string name="bookmarks_unselected_icon_description">Экран закладок закрыт</string>
 
+    <string name="home_screen_top_app_bar_title">Вдохновляющие изображения</string>
+    <string name="search_screen_top_app_bar_title">Найдите изображения</string>
+    <string name="bookmarks_screen_top_app_bar_title">Закладки</string>
+
 </resources>

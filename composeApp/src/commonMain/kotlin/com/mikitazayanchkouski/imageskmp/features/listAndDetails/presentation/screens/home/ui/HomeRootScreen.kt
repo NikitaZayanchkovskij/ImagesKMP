@@ -1,19 +1,19 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -30,25 +30,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.components.ImagesListCardItem
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListState
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
 import imageskmp.composeapp.generated.resources.Res
 import imageskmp.composeapp.generated.resources.content_description_smiling_phone_icon
-import imageskmp.composeapp.generated.resources.icon_image_placeholder
 import imageskmp.composeapp.generated.resources.icon_smiling_phone
 import imageskmp.composeapp.generated.resources.smiling_phone_icon_message
 import kotlinx.coroutines.launch
@@ -107,9 +106,9 @@ fun HomeRoot(
         }
     ) { paddingValues ->
         CuratedImagesScreen(
-            modifier = Modifier.padding(
-                paddingValues = paddingValues // To safely support Edge to Edge
-            ),
+//            modifier = Modifier.padding(
+//                paddingValues = paddingValues // To safely support Edge to Edge
+//            ),
             imagesState = imagesState,
             userAction = viewModel::onUserAction
         )
@@ -118,7 +117,7 @@ fun HomeRoot(
 
 @Composable
 private fun CuratedImagesScreen(
-    modifier: Modifier = Modifier,
+//    modifier: Modifier = Modifier,
     imagesState: ImagesListState,
     userAction: (ImagesListActions) -> Unit
 ) {
@@ -162,28 +161,26 @@ private fun CuratedImagesScreen(
                 )
             }
         } else {
-            LazyColumn(
-                modifier = modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(space = 20.dp)
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxSize()
+                    .background(color = colorScheme.background),
+                columns = StaggeredGridCells.Fixed(count = 2),
+                verticalItemSpacing = 10.dp,
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 10.dp,
+                    alignment = Alignment.CenterHorizontally
+                )
             ) {
                 items(
                     items = imagesState.imagesList,
-                    key = { imageUiModel -> imageUiModel.imageId }
+                    key = { image -> image.imageId }
                 ) { imageUiModel ->
-                    AsyncImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 300.dp)
-                            .clip(shape = RoundedCornerShape(size = 20.dp)),
-                        model = imageUiModel.imageResolutions.landscape,
-                        contentDescription = imageUiModel.description,
-                        alignment = Alignment.Center,
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(
-                            resource = Res.drawable.icon_image_placeholder
-                        )
+                    ImagesListCardItem(
+                        imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
+                        imageDescription = imageUiModel.description,
+                        photographerName = imageUiModel.photographerName
                     )
                 }
             }
@@ -213,33 +210,33 @@ private fun CuratedImagesScreenPreview() {
                 imagesState = ImagesListState(
                     isLoading = false,
                     isDataReceivedSuccessfully = true,
-                    imagesList = emptyList()
-//                    imagesList = (1..10).map { index ->
-//                        ImageUiModel(
-//                            imageId = index.toLong(),
-//                            imageCategory = "CURATED",
-//                            isInBookmarks = true,
-//                            width = 3024,
-//                            height = 3024,
-//                            imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
-//                            photographerName = "Joey Farina",
-//                            photographerUrl = "https://www.pexels.com/@joey",
-//                            photographerId = 680589,
-//                            avgColor = "#978E82",
-//                            imageResolutions = ImageSrcUiModel(
-//                                original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
-//                                large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-//                                large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-//                                medium = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350",
-//                                small = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130",
-//                                portrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
-//                                landscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-//                                tiny = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
-//                            ),
-//                            liked = false,
-//                            description = "Brown Rocks During Golden Hour"
-//                        )
-//                    }
+//                    imagesList = emptyList()
+                    imagesList = (1..10).map { index ->
+                        ImageUiModel(
+                            imageId = index.toLong(),
+                            imageCategory = "CURATED",
+                            isInBookmarks = true,
+                            width = 3024,
+                            height = 3024,
+                            imageUrl = "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
+                            photographerName = "Joey Farina",
+                            photographerUrl = "https://www.pexels.com/@joey",
+                            photographerId = 680589,
+                            avgColor = "#978E82",
+                            imageResolutions = ImageSrcUiModel(
+                                original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
+                                large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                                large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+                                medium = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=350",
+                                small = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=130",
+                                portrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+                                landscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+                                tiny = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
+                            ),
+                            liked = false,
+                            description = "Brown Rocks During Golden Hour"
+                        )
+                    }
                 ),
                 userAction = { action -> }
             )
