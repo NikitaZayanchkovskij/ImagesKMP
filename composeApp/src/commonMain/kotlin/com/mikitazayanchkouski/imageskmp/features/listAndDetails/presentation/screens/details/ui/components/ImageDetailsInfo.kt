@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.components
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +44,8 @@ fun ImageDetailsInfo(
     photographerName: String,
     photographerUrl: String,
     imageDescription: String,
-    isInBookmarks: Boolean
+    isInBookmarksState: Boolean,
+    switchIsInBookmarksState: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -93,7 +94,7 @@ fun ImageDetailsInfo(
             horizontalArrangement = Arrangement.End
         ) {
             Button(
-                onClick = {},
+                onClick = switchIsInBookmarksState,
                 shape = RoundedCornerShape(size = 20.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorScheme.secondary,
@@ -110,19 +111,19 @@ fun ImageDetailsInfo(
                 ) {
                     Icon(
                         painter = painterResource(
-                            resource = if (isInBookmarks) {
+                            resource = if (isInBookmarksState) {
                                 Res.drawable.icon_remove_from_bookmarks
                             } else Res.drawable.icon_add_to_bookmarks
                         ),
                         contentDescription = stringResource(
-                            resource = if (isInBookmarks) {
+                            resource = if (isInBookmarksState) {
                                 Res.string.content_description_icon_remove_from_bookmarks
                             } else Res.string.content_description_icon_add_to_bookmarks
                         )
                     )
                     Text(
                         text = stringResource(
-                            resource = if (isInBookmarks) {
+                            resource = if (isInBookmarksState) {
                                 Res.string.remove_from_bookmarks_title
                             } else Res.string.add_to_bookmarks_title
                         )
@@ -154,7 +155,8 @@ private fun ImageDetailsInfoPreview() {
                 photographerUrl = "https://www.pexels.com/@joey",
                 imageDescription = "Some loooong image description here..." +
                         "Or maybe not very long... :)",
-                isInBookmarks = true
+                isInBookmarksState = true,
+                switchIsInBookmarksState = {}
             )
         }
     }

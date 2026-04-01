@@ -46,6 +46,18 @@ class OfflineFirstImagesRepository(
         return localDataSource.getCachedImages(category = category)
     }
 
+    override fun getImageFromCacheById(imageId: Long): Flow<ImageDomainModel?> {
+        return localDataSource.getImageFromCacheById(imageId = imageId)
+    }
+
+    override suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories) {
+        localDataSource.addImageToBookmarks(imageId = imageId, imageCategory = imageCategory)
+    }
+
+    override suspend fun deleteImageFromBookmarks(imageId: Long) {
+        localDataSource.deleteImageFromBookmarks(imageId = imageId)
+    }
+
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {
         return localDataSource.getBookmarks()
     }

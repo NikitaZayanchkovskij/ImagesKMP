@@ -8,7 +8,6 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringRe
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents.OnNavigateToImageDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -106,7 +105,7 @@ class ImagesListViewModel(
             is ImagesListActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
-                        element = OnNavigateToImageDetails(imageId = action.imageId)
+                        element = ImagesListEvents.OnNavigateToImageDetails(imageId = action.imageId)
                     )
                 }
             }

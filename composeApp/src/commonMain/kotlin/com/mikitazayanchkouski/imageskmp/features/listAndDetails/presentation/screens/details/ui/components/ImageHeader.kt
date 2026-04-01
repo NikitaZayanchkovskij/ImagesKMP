@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.components
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ImageHeaderCard(
     modifier: Modifier = Modifier,
-    imageUrlInLandscape: String,
+    imageUrlOriginal: String,
     imageDescription: String,
     onNavigateBackToListScreen: () -> Unit
 ) {
@@ -50,7 +50,7 @@ fun ImageHeaderCard(
                 .height(height = 300.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(size = 20.dp)),
-            model = imageUrlInLandscape,
+            model = imageUrlOriginal,
             contentDescription = imageDescription,
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop,
@@ -113,7 +113,7 @@ private fun ImageHeaderCardPreview() {
     ImagesAppTheme {
         Surface {
             ImageHeaderCard(
-                imageUrlInLandscape = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+                imageUrlOriginal = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
                 imageDescription = "Brown Rocks During Golden Hour",
                 onNavigateBackToListScreen = {}
             )

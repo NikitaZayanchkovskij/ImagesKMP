@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.DetailsRoot
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.DetailsRoot
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.entry.EntryRootScreen
 
 @Composable

@@ -7,21 +7,10 @@ import androidx.room.Upsert
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.BookmarkedImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.JoinBookmarkWithImage
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ImagesDao {
-
-    /* TODO: (Проверить здесь позже случай, если с сервера приходит новый
-        список изображений и я обновляю кэш на новый - чтобы не пропали изображения,
-        которые были в закладках.
-        Возможно перед тем, как обновить нужно сначала:
-        1) пройтись по всему списку
-        2) сохранить изображения, которые были в закладках во временный список в OfflineFirstRepository
-        3) и потом к новому списку изображений добавить ещё те, что были в закладках
-        Можно использовать функцию ниже: getBookmarkedImagesIds()
-        ) */
 
     /* Remote list of images on the server periodically updates.
      * For example: each day it is a new list of images.
@@ -34,10 +23,6 @@ interface ImagesDao {
         category: String
     ) {
         if (serverImages.isEmpty()) return
-
-        /* TODO: Проверить случай, если изображения с какой-то категории
-            были в закладках и обновилась информация для этой категории/вкладки,
-            обновился кэш в базе данных - проверить, чтобы не пропали закладки.*/
 
         upsertImagesToCache(images = serverImages)
 
@@ -68,13 +53,19 @@ interface ImagesDao {
      * We only want one for the Details screen - that's why LIMIT is here.
      */
     @Query("SELECT * FROM imageentity WHERE imageId = :imageId LIMIT 1")
-    suspend fun getImageFromCacheById(imageId: Long): ImageEntity?
+    fun getImageFromCacheById(imageId: Long): Flow<ImageEntity?>
 
     @Query("DELETE FROM imageentity")
     suspend fun clearAllImagesInCache()
 
-    @Upsert
-    suspend fun insertImageToBookmarks(bookmark: BookmarkedImageEntity)
+    @Transaction
+    suspend fun insertImageToBookmarksAndSyncCache(bookmark: BookmarkedImageEntity) {
+        upsertImageToBookmarks(bookmark = bookmark)
+        updateIsImageInBookmarksStatusInCache(
+            isInBookmarks = true,
+            imageId = bookmark.imageId
+        )
+    }
 
     @Transaction // Ensures both happen, or neither happens.
     suspend fun deleteImageFromBookmarksAndSyncCache(imageId: Long) {
@@ -84,6 +75,9 @@ interface ImagesDao {
             imageId = imageId
         )
     }
+
+    @Upsert
+    suspend fun upsertImageToBookmarks(bookmark: BookmarkedImageEntity)
 
     @Query("DELETE FROM bookmarkedimageentity WHERE imageId = :imageId")
     suspend fun deleteImageFromBookmarks(imageId: Long)

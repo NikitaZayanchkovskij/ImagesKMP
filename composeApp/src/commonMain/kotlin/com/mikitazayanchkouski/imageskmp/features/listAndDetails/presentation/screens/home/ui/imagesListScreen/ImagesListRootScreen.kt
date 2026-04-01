@@ -49,11 +49,11 @@ import org.koin.core.parameter.parametersOf
 fun ImagesListRoot(
     category: ImagesCategories,
     viewModel: ImagesListViewModel = koinViewModel(
-        key = category.name,
+        key = category.inServerFormat,
         parameters = { parametersOf(category) }
     ),
     onNavigateToImageDetails: (Long) -> Unit,
-    onShowSnackBarMessage: (String) -> Unit
+    onShowSnackBarErrorMessage: (String) -> Unit
 ) {
     val imagesState by viewModel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -67,7 +67,7 @@ fun ImagesListRoot(
             is ImagesListEvents.OnImagesLoadingFailed -> {
                 scope.launch {
                     val errorMessageAsString = getString(resource = event.message)
-                    onShowSnackBarMessage(errorMessageAsString)
+                    onShowSnackBarErrorMessage(errorMessageAsString)
                 }
             }
         }

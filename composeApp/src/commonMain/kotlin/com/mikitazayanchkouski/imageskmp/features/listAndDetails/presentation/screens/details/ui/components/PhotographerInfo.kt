@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.components
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

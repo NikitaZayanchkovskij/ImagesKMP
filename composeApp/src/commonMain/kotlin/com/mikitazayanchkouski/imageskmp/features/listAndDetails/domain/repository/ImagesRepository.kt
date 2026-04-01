@@ -23,6 +23,9 @@ interface ImagesRepository {
      * to get the most up to date, offline first, images data.
      */
     fun getImagesFromTheDatabase(category: ImagesCategories): Flow<List<ImageDomainModel>>
+    fun getImageFromCacheById(imageId: Long): Flow<ImageDomainModel?>
+    suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories)
+    suspend fun deleteImageFromBookmarks(imageId: Long)
 
     /** Used in the BookmarksScreen to get bookmarks. */
     fun getBookmarks(): Flow<List<ImageDomainModel>>

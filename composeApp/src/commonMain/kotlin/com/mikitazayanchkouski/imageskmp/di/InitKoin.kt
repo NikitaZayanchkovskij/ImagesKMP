@@ -1,7 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.di
 
 import com.mikitazayanchkouski.imageskmp.core.data.di.commonCoreDataModule
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.di.commonListAndDetailsPresentationModule
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.di.commonPresentationModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -10,7 +10,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         config?.invoke(this)
         modules(
             commonCoreDataModule,
-            commonListAndDetailsPresentationModule
+            commonPresentationModule
         )
     }
 }

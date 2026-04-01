@@ -11,5 +11,8 @@ interface LocalImagesDataSource {
         category: ImagesCategories
     )
     fun getCachedImages(category: ImagesCategories): Flow<List<ImageDomainModel>>
+    fun getImageFromCacheById(imageId: Long): Flow<ImageDomainModel?>
+    suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories)
+    suspend fun deleteImageFromBookmarks(imageId: Long)
     fun getBookmarks(): Flow<List<ImageDomainModel>>
 }

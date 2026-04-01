@@ -92,7 +92,7 @@ private fun HomeScreen(
                 onNavigateToImageDetails = { imageId ->
                     onNavigateToImageDetails(imageId)
                 },
-                onShowSnackBarMessage = { message ->
+                onShowSnackBarErrorMessage = { message ->
                     onShowSnackBarMessage(message)
                 }
             )
