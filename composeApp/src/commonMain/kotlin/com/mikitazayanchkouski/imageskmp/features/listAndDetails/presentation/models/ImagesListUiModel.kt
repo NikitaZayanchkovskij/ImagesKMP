@@ -1,5 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models
 
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
+
 // TODO: Later check, which parameters I need, and which I don't
 data class ImagesListUiModel(
     val totalResults: Int,
@@ -13,7 +15,7 @@ data class ImagesListUiModel(
 
 data class ImageUiModel(
     val imageId: Long,
-    val imageCategory: String,
+    val imageCategory: ImagesCategories,
     val isInBookmarks: Boolean,
     val width: Int,
     val height: Int,

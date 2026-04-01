@@ -25,7 +25,7 @@ fun ImagesListDto.mapToDomainModel(category: ImagesCategories): ImagesListDomain
 fun ImageDto.mapToDomainModel(category: ImagesCategories): ImageDomainModel {
     return ImageDomainModel(
         imageId = id,
-        imageCategory = category.inServerFormat,
+        imageCategory = category,
         isInBookmarks = false,
         width = width,
         height = height,

@@ -51,4 +51,17 @@
     <string name="ocean_category">Ocean</string>
     <string name="space_category">Space</string>
 
+    <string name="content_description_icon_arrow_back">Icon button to navigate back</string>
+    <string name="content_description_icon_share">Icon button to share this image</string>
+
+    <string name="image_category_title">Category</string>
+    <string name="image_description_title">Description</string>
+    <string name="show_profile_button_title">Profile</string>
+
+    <string name="content_description_icon_remove_from_bookmarks">Remove image from bookmarks</string>
+    <string name="content_description_icon_add_to_bookmarks">Add image to bookmarks</string>
+
+    <string name="add_to_bookmarks_title">Add to Bookmarks</string>
+    <string name="remove_from_bookmarks_title">Remove from Bookmarks</string>
+
 </resources>

@@ -12,7 +12,7 @@ data class ImagesListDomainModel(
 
 data class ImageDomainModel(
     val imageId: Long,
-    val imageCategory: String,
+    val imageCategory: ImagesCategories,
     val isInBookmarks: Boolean,
     val width: Int,
     val height: Int,

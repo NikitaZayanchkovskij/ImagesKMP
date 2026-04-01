@@ -138,7 +138,7 @@ private fun ImagesListScreen(
             ) {
                 items(
                     items = imagesState.imagesList,
-                    key = { image -> image.imageId }
+                    key = { image -> "${image.imageId}${image.imageCategory}" }
                 ) { imageUiModel ->
                     ImagesListCardItem(
                         imageId = imageUiModel.imageId,

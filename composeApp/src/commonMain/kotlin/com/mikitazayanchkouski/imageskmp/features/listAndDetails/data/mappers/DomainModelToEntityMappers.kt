@@ -9,7 +9,7 @@ fun ImageDomainModel.mapToEntity(): ImageEntity {
     return ImageEntity(
         imageUniqueKey = "$imageId$imageCategory",
         imageId = imageId,
-        imageCategory = imageCategory,
+        imageCategory = imageCategory.inServerFormat,
         isInBookmarks = isInBookmarks,
         width = width,
         height = height,

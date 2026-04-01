@@ -11,7 +11,8 @@ val LightColorScheme = lightColorScheme(
     background = lightThemeBackground,
     onBackground = lightThemeOnBackground,
     surface = lightThemeSurface,
-    onSurface = lightThemeOnSurface
+    onSurface = lightThemeOnSurface,
+    onSurfaceVariant = lightThemeOnSurfaceVariant
 )
 
 val DarkColorScheme = darkColorScheme(
@@ -22,5 +23,6 @@ val DarkColorScheme = darkColorScheme(
     background = darkThemeBackground,
     onBackground = darkThemeOnBackground,
     surface = darkThemeSurface,
-    onSurface = darkThemeOnSurface
+    onSurface = darkThemeOnSurface,
+    onSurfaceVariant = darkThemeOnSurfaceVariant
 )

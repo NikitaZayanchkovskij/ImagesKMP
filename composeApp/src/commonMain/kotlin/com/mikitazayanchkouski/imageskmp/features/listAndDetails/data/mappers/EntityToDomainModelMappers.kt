@@ -5,11 +5,12 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.JoinBookmarkWithImage
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 
 fun JoinBookmarkWithImage.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
         imageId = image.imageId,
-        imageCategory = image.imageCategory,
+        imageCategory = mapImageCategoryFromStringToEnum(category = image.imageCategory),
         isInBookmarks = image.isInBookmarks,
         width = image.width,
         height = image.height,
@@ -27,7 +28,7 @@ fun JoinBookmarkWithImage.mapToDomainModel(): ImageDomainModel {
 fun ImageEntity.mapToDomainModel(category: String): ImageDomainModel {
     return ImageDomainModel(
         imageId = imageId,
-        imageCategory = category,
+        imageCategory = mapImageCategoryFromStringToEnum(category = imageCategory),
         isInBookmarks = isInBookmarks,
         width = width,
         height = height,
@@ -53,4 +54,17 @@ private fun ImageSrcEntity.mapToDomainModel(): ImageSrcDomainModel {
         landscape = landscape,
         tiny = tiny
     )
+}
+
+private fun mapImageCategoryFromStringToEnum(category: String): ImagesCategories {
+    return when (category) {
+        ImagesCategories.CURATED.inServerFormat -> ImagesCategories.CURATED
+        ImagesCategories.ISLANDS.inServerFormat -> ImagesCategories.ISLANDS
+        ImagesCategories.NATURE.inServerFormat -> ImagesCategories.NATURE
+        ImagesCategories.OUTDOORS.inServerFormat -> ImagesCategories.OUTDOORS
+        ImagesCategories.SUNNY_MORNING.inServerFormat -> ImagesCategories.SUNNY_MORNING
+        ImagesCategories.OCEAN.inServerFormat -> ImagesCategories.OCEAN
+        ImagesCategories.SPACE.inServerFormat -> ImagesCategories.SPACE
+        else -> ImagesCategories.CURATED
+    }
 }
