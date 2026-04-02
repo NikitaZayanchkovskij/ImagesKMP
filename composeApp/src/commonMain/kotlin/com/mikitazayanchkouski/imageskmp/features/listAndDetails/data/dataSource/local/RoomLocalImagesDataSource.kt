@@ -42,8 +42,8 @@ class RoomLocalImagesDataSource(
     override suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories) {
         imagesDataBase.imagesDao.insertImageToBookmarksAndSyncCache(
             bookmark = BookmarkedImageEntity(
-                imageUniqueKey = "$imageId$imageCategory",
-//                imageUniqueKey = "$imageId${imageCategory.inServerFormat}",
+//                imageUniqueKey = "$imageId$imageCategory",
+                imageUniqueKey = "$imageId${imageCategory.inServerFormat}",
                 imageId = imageId
             )
         )

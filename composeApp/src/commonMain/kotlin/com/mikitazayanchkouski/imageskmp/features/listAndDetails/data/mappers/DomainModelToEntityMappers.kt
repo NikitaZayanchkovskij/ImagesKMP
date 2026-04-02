@@ -7,7 +7,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.I
 
 fun ImageDomainModel.mapToEntity(): ImageEntity {
     return ImageEntity(
-        imageUniqueKey = "$imageId$imageCategory",
+        imageUniqueKey = "$imageId${imageCategory.inServerFormat}",
         imageId = imageId,
         imageCategory = imageCategory.inServerFormat,
         isInBookmarks = isInBookmarks,
