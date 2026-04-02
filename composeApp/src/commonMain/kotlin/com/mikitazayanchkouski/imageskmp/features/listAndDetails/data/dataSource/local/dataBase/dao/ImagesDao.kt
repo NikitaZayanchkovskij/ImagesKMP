@@ -29,69 +29,67 @@ interface ImagesDao {
 
         /* The check bellow is needed to not lose isInBookmarks status of cached images,
          * and keep it in sync with images, from bookmarks entity.
-         * (I have separate entities:
-         * one for images in cache, and one specifically dedicated to images bookmarks)
+         * (I have separate entities: one for images in cache,
+         * and one specifically dedicated to images bookmarks)
+         * In this function I strictly need to set the right isInBookmarks status,
+         * for images in cache.
+         * Entity, dedicated for bookmarks, is untouched.
          *
          * Because, when we update images list in cache,
-         * to the fresh one from the server - then, all images
-         * from the server's list are not in bookmarks.
+         * to the fresh one, from the server - then, all images
+         * from the server's list are not in bookmarks by default.
          * But likely, the user already had some images from the cache bookmarked.
          * And if we don't do this sync - then,
          * isInBookmarks status of cached images will be lost.
          */
-        val localImages = getImagesFromCacheByCategory(imageCategory = category).first()
-        val imagesThatWereInBookmarks = mutableListOf<ImageEntity>()
+        val localImagesInCache = getImagesFromCacheByCategory(imageCategory = category).first()
 
-        localImages.forEach { imageEntity ->
-            if (imageEntity.isInBookmarks) {
-                imagesThatWereInBookmarks.add(element = imageEntity)
-            }
-        }
+        val idsOfImagesThatAreInBookmarks = localImagesInCache
+            .filter { imageEntity -> imageEntity.isInBookmarks }
+            .map { imageEntity -> imageEntity.imageId }
+            .toSet() /* .toSet() is needed to avoid nested loops in the code bellow,
+                      * where this line of code is called:
+                      * idsOfImagesThatAreInBookmarks.contains(element = serverImage.imageId)
+                      *
+                      * If ids are just a list - the "contains" check will run a loop,
+                      * and it will increase the amount of operations quadratically. ($O(N^2)$)
+                      *
+                      * Set "says": "If the element exists - he is under this address in memory."
+                      * (Analogy is: map and a key value pair.)
+                      * And because of that - no need to run a loop, for all elements in a collection.
+                      */
 
-        val initialListOfServerImages = serverImages.toMutableList()
-
-        /* At the beginning of our check I set it to equals.
-         * After loops bellow - this list will change if some images,
-         * that came from the server, was in bookmarks.
-         * If not - then it will be inserted without changes.
-         */
-        val newListToInsertToCache = initialListOfServerImages
-
-        initialListOfServerImages.forEachIndexed { index, serverImage ->
-            imagesThatWereInBookmarks.forEach { imageFromBookmarks ->
-                if (serverImage.imageId == imageFromBookmarks.imageId) {
-                    newListToInsertToCache.set(
-                        index = index,
-                        element = imageFromBookmarks
-                    )
-                }
-            }
-        }
-
-        /* Now in our newListToInsertToCache, we have all up-to-date images from the server,
-         * that have the right isInBookmarks status.
-         * So, if any image, that was received from the server, was in bookmarks - then,
-         * it presents in this list, with isInBookmarks field == true.
+        /* Now in our newListToInsertToCache, we have all up-to-date images
+         * from the server, that have the right isInBookmarks status.
+         * So, if any image, that was received from the server, was already in bookmarks -
+         * then, it is present in this list, with isInBookmarks field == true.
          * And also, it is our up-to-date images list from the server.
-         * Now we can safely insert them to the database.
+         * Now we can safely insert them to the database to cache.
          */
+        val newListToInsertToCache = serverImages.map { serverImage ->
+            if (idsOfImagesThatAreInBookmarks.contains(element = serverImage.imageId)) {
+                serverImage.copy(isInBookmarks = true)
+            } else {
+                serverImage
+            }
+        }
+
         upsertImagesToCache(images = newListToInsertToCache)
 
         /* And also now we need to delete all images,
          * that exist in the database, but not on the server.
-         * To not clog up the database.
+         * To not clog up the database, and keep it in sync.
          */
+        val oldLocalImagesInCacheIds = localImagesInCache.map { imageEntity -> imageEntity.imageId }
+        val upToDateServerImagesIds = serverImages.map { imageEntity -> imageEntity.imageId }.toSet()
 
-        val upToDateServerImagesIds = newListToInsertToCache.map { upToDateImage -> upToDateImage.imageId }
-        val oldLocalImagesIds = localImages.map { oldImage -> oldImage.imageId }
+        val outdatedImagesIds = oldLocalImagesInCacheIds.filter { oldImageId ->
+            oldImageId !in upToDateServerImagesIds
+        }
 
-        /* After substraction, if everything is in sync - list will be empty.
-         * If not - outdatedIds will contain or outdated local ids.
-         * And we want to delete them.
-         */
-        val outdatedIds = oldLocalImagesIds - upToDateServerImagesIds
-
-        deleteImagesById(ids = outdatedIds)
+        if (outdatedImagesIds.isNotEmpty()) {
+            deleteImagesByIds(ids = outdatedImagesIds)
+        }
     }
 
     @Upsert
@@ -165,12 +163,15 @@ interface ImagesDao {
     @Query("DELETE FROM bookmarkedimageentity")
     suspend fun clearAllImagesInBookmarks()
 
-    @Transaction
-    suspend fun deleteImagesById(ids: List<Long>) {
-        ids.forEach { imageId ->
-            deleteImageById(id = imageId)
-        }
-    }
+//    @Transaction
+//    suspend fun deleteImagesByIds(ids: List<Long>) {
+//        ids.forEach { imageId ->
+//            deleteImageById(id = imageId)
+//        }
+//    }
+
+    @Query("DELETE FROM imageentity WHERE imageId IN (:ids)")
+    suspend fun deleteImagesByIds(ids: List<Long>)
 
     @Query("DELETE FROM imageentity WHERE imageId =:id")
     suspend fun deleteImageById(id: Long)

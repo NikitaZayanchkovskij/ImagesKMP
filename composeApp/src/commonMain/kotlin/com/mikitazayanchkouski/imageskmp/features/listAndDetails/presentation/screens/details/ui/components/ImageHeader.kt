@@ -82,7 +82,11 @@ fun ImageHeaderCard(
             IconButton(
                 onClick = {
                     println("Share the image")
-                }
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = colorScheme.surface
+                ),
+                shape = CircleShape
             ) {
                 Icon(
                     painter = painterResource(
