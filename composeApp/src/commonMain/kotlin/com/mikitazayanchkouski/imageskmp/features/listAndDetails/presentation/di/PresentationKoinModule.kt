@@ -3,6 +3,7 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.d
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.viewModel.ImageDetailsViewModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchForImagesViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -16,7 +17,11 @@ val commonPresentationModule = module {
     viewModel<ImageDetailsViewModel> { parameters ->
         ImageDetailsViewModel(
             imagesRepository = get<ImagesRepository>(),
-            imageId = parameters.get()
+            imageId = parameters.get(), // Automatically finds the Long
+            isThisScreenOpenedFromSearchScreen = parameters.get() // Automatically finds the Boolean
         )
+    }
+    viewModel<SearchForImagesViewModel> {
+        SearchForImagesViewModel(imagesRepository = get<ImagesRepository>())
     }
 }

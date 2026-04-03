@@ -17,7 +17,7 @@ interface ImagesRepository {
      * This updated will trigger the [getImagesFromTheDatabase] function,
      * which will emit changes to the UI layer.
      */
-    suspend fun fetchImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
+    suspend fun loadImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
 
     /** Our UI and ViewModel will simply listen to this function,
      * to get the most up to date, offline first, images data.
@@ -26,6 +26,8 @@ interface ImagesRepository {
     fun getImageFromCacheById(imageId: Long): Flow<ImageDomainModel?>
     suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories)
     suspend fun deleteImageFromBookmarks(imageId: Long)
+    suspend fun loadSearchedImages(searchQuery: String): CustomResult<ImagesListDomainModel, DataError.Remote>
+    suspend fun loadSearchedImageById(imageId: String): CustomResult<ImageDomainModel, DataError.Remote>
 
     /** Used in the BookmarksScreen to get bookmarks. */
     fun getBookmarks(): Flow<List<ImageDomainModel>>

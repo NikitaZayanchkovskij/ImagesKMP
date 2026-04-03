@@ -6,6 +6,7 @@ import imageskmp.composeapp.generated.resources.islands_category
 import imageskmp.composeapp.generated.resources.nature_category
 import imageskmp.composeapp.generated.resources.ocean_category
 import imageskmp.composeapp.generated.resources.outdoors_category
+import imageskmp.composeapp.generated.resources.search_category
 import imageskmp.composeapp.generated.resources.space_category
 import imageskmp.composeapp.generated.resources.sunny_morning_category
 import org.jetbrains.compose.resources.StringResource
@@ -41,5 +42,9 @@ enum class ImagesCategories(
     SPACE(
         inServerFormat = "space",
         titleForTheUi = Res.string.space_category
+    ),
+    SEARCH(
+        inServerFormat = "search",
+        titleForTheUi = Res.string.search_category
     )
 }

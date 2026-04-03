@@ -7,13 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.BookmarksRoot
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.rootScreen.HomeRoot
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.SearchRoot
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.ui.SearchRoot
 
 @Composable
 fun BottomNavigationBarGraph(
     paddingValues: PaddingValues,
     navController: NavHostController,
-    onNavigateToImageDetails: (Long) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     NavHost(
@@ -29,18 +29,14 @@ fun BottomNavigationBarGraph(
         }
         composable<NavGraphRoutes.SearchScreen> {
             SearchRoot(
-                paddingValuesFromRootScaffold = paddingValues,
-                onNavigateToImageDetails = { imageId ->
-                    onNavigateToImageDetails(imageId)
-                }
+                paddingValuesFromEntryRootScaffold = paddingValues,
+                onNavigateToImageDetails = onNavigateToImageDetails
             )
         }
         composable<NavGraphRoutes.BookmarksScreen> {
             BookmarksRoot(
                 paddingValuesFromRootScaffold = paddingValues,
-                onNavigateToImageDetails = { imageId ->
-                    onNavigateToImageDetails(imageId)
-                }
+                onNavigateToImageDetails = onNavigateToImageDetails
             )
         }
     }

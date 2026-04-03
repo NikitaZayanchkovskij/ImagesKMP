@@ -1,11 +1,14 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local
 
+import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.CustomResult
+import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.DataError
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.ImagesDatabase
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.BookmarkedImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

@@ -1,7 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageDto
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageSrcDto
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageResolutionsDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
@@ -10,15 +10,15 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.I
 
 fun ImagesListDto.mapToDomainModel(category: ImagesCategories): ImagesListDomainModel {
     return ImagesListDomainModel(
-        totalResults = total_results,
+        totalResults = totalResults,
         pageNumber = page,
-        amountPerPage = per_page,
+        amountPerPage = perPage,
         listOfImages = photos.map { imageDto ->
             imageDto.mapToDomainModel(category = category)
         },
-        numberOfResultsForTheRequest = total_results,
-        previousPage = prev_page,
-        nextPage = next_page
+        numberOfResultsForTheRequest = totalResults,
+        previousPage = prevPage,
+        nextPage = nextPage
     )
 }
 
@@ -30,17 +30,17 @@ fun ImageDto.mapToDomainModel(category: ImagesCategories): ImageDomainModel {
         width = width,
         height = height,
         imageUrl = url,
-        photographerName = photographer,
-        photographerUrl = photographer_url,
-        photographerId = photographer_id,
-        avgColor = avg_color,
-        imageResolutions = src.mapToDomainModel(),
+        photographerName = photographerName,
+        photographerUrl = photographerUrl,
+        photographerId = photographerId,
+        avgColor = avgColor,
+        imageResolutions = imageResolutions.mapToDomainModel(),
         liked = liked,
-        description = alt
+        description = description
     )
 }
 
-fun ImageSrcDto.mapToDomainModel(): ImageSrcDomainModel {
+fun ImageResolutionsDto.mapToDomainModel(): ImageSrcDomainModel {
     return ImageSrcDomainModel(
         original = original,
         large2x = large2x,

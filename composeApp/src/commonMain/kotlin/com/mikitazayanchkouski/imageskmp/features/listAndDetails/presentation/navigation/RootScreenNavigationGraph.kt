@@ -23,10 +23,16 @@ fun RootScreenNavigationGraph(
             EntryRootScreen(rootScreenNavHostController = navHostController)
         }
         composable<NavGraphRoutes.DetailsScreen> { backStackEntry ->
-            val imageId = backStackEntry.toRoute<NavGraphRoutes.DetailsScreen>().imageId
+            val imageId = backStackEntry
+                .toRoute<NavGraphRoutes.DetailsScreen>()
+                .imageId
+            val isThisScreenOpenedFromSearchScreen = backStackEntry
+                .toRoute<NavGraphRoutes.DetailsScreen>()
+                .isThisScreenOpenedFromSearchScreen
 
             DetailsRoot(
                 imageId = imageId,
+                isThisScreenOpenedFromSearchScreen = isThisScreenOpenedFromSearchScreen,
                 onNavigateBackToListScreen = {
                     navHostController.popBackStack()
                 }

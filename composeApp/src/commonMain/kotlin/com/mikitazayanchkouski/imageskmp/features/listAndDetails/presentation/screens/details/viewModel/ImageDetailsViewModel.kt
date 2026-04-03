@@ -2,6 +2,9 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onFailure
+import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
+import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringResource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class ImageDetailsViewModel(
     private val imagesRepository: ImagesRepository,
-    private val imageId: Long
+    private val imageId: Long,
+    private val isThisScreenOpenedFromSearchScreen: Boolean
 ) : ViewModel() {
     private val eventChannel = Channel<ImageDetailsEvents>()
     val events = eventChannel.receiveAsFlow()
@@ -50,12 +54,10 @@ class ImageDetailsViewModel(
                 _state.value.image?.let { image ->
                     if (image.isInBookmarks) {
                         viewModelScope.launch {
-                            println("DELETE IMAGE FROM BOOKMARKS")
                             imagesRepository.deleteImageFromBookmarks(imageId = image.imageId)
                         }
                     } else {
                         viewModelScope.launch {
-                            println("ADD IMAGE TO BOOKMARKS")
                             imagesRepository.addImageToBookmarks(
                                 imageId = image.imageId,
                                 imageCategory = image.imageCategory
@@ -73,25 +75,54 @@ class ImageDetailsViewModel(
                 model.copy(isLoading = true)
             }
 
-            imagesRepository.getImageFromCacheById(imageId = imageId).collect { imageDomainModel ->
-                if (imageDomainModel != null) {
-                    _state.update { model ->
-                        println("IS IMAGE IN BOOKMARKS? --- ${imageDomainModel.isInBookmarks}")
-                        model.copy(
-                            isLoading = false,
-                            isImageLoadedSuccessfully = true,
-                            image = imageDomainModel.mapToUiModel()
+            if (isThisScreenOpenedFromSearchScreen) {
+                imagesRepository
+                    .loadSearchedImageById(imageId = imageId.toString())
+                    .onSuccess { imageDomainModel ->
+                        _state.update { model ->
+                            model.copy(
+                                isLoading = false,
+                                isImageLoadedSuccessfully = true,
+                                image = imageDomainModel.mapToUiModel()
+                            )
+                        }
+                    }
+                    .onFailure { remoteError ->
+                        _state.update { model ->
+                            model.copy(
+                                isLoading = false,
+                                isImageLoadedSuccessfully = false,
+                                image = null
+                            )
+                        }
+                        eventChannel.send(
+                            element = ImageDetailsEvents.OnImageLoadingFailed(
+                                message = remoteError.mapToStringResource()
+                            )
                         )
                     }
-                } else {
-                    _state.update { model ->
-                        model.copy(
-                            isLoading = false,
-                            isImageLoadedSuccessfully = false,
-                            image = null
-                        )
+            } else {
+                imagesRepository
+                    .getImageFromCacheById(imageId = imageId)
+                    .collect { imageDomainModel ->
+                        if (imageDomainModel != null) {
+                            _state.update { model ->
+                                model.copy(
+                                    isLoading = false,
+                                    isImageLoadedSuccessfully = true,
+                                    image = imageDomainModel.mapToUiModel()
+                                )
+                            }
+                        } else {
+                            _state.update { model ->
+                                model.copy(
+                                    isLoading = false,
+                                    isImageLoadedSuccessfully = false,
+                                    image = null
+                                )
+                            }
+                        }
                     }
-                }
             }
         }
     }

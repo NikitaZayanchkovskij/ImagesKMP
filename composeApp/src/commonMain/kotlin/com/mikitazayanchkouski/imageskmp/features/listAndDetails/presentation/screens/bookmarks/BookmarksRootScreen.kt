@@ -17,7 +17,7 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 @Composable
 fun BookmarksRoot(
     paddingValuesFromRootScaffold: PaddingValues,
-    onNavigateToImageDetails: (Long) -> Unit
+    onNavigateToImageDetails: (Long, Boolean) -> Unit
 ) {
     BookmarksScreen()
 }

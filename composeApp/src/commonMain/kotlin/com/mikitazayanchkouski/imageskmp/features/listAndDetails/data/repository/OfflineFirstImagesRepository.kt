@@ -27,7 +27,7 @@ class OfflineFirstImagesRepository(
     private val localDataSource: LocalImagesDataSource
 ) : ImagesRepository {
 
-    override suspend fun fetchImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote> {
+    override suspend fun loadImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote> {
         return remoteDataSource
             .loadImages(category = category)
             .onSuccess { imagesListDomainModel ->
@@ -56,6 +56,14 @@ class OfflineFirstImagesRepository(
 
     override suspend fun deleteImageFromBookmarks(imageId: Long) {
         localDataSource.deleteImageFromBookmarks(imageId = imageId)
+    }
+
+    override suspend fun loadSearchedImages(searchQuery: String): CustomResult<ImagesListDomainModel, DataError.Remote> {
+        return remoteDataSource.loadSearchedImages(searchQuery = searchQuery)
+    }
+
+    override suspend fun loadSearchedImageById(imageId: String): CustomResult<ImageDomainModel, DataError.Remote> {
+        return remoteDataSource.loadSearchedImageById(imageId = imageId)
     }
 
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {

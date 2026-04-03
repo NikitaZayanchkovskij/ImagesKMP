@@ -50,6 +50,7 @@
     <string name="sunny_morning_category">Sunny morning</string>
     <string name="ocean_category">Ocean</string>
     <string name="space_category">Space</string>
+    <string name="search_category">Search</string>
 
     <string name="content_description_icon_arrow_back">Icon button to navigate back</string>
     <string name="content_description_icon_share">Icon button to share this image</string>
@@ -63,5 +64,10 @@
 
     <string name="add_to_bookmarks_title">Add to Bookmarks</string>
     <string name="remove_from_bookmarks_title">Remove from Bookmarks</string>
+
+    <string name="search_query_is_empty_info_message">Your search request can not be blank. Please, type some images category to search for.</string>
+    <string name="content_description_search_bar_icon">Search for images</string>
+    <string name="search_bar_hint">Search for images</string>
+    <string name="response_for_image_search_is_empty">Sorry, it seems like there are no such images, according to your request. Please, try something else.</string>
 
 </resources>

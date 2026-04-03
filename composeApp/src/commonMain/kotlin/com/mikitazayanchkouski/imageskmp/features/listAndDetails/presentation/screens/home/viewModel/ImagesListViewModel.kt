@@ -8,6 +8,7 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringRe
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -76,7 +77,7 @@ class ImagesListViewModel(
             domainModel.mapToUiModel()
         }
         currentImagesState.copy(
-            isDataReceivedSuccessfully = true,
+            areImagesReceivedSuccessfully = true,
             imagesList = imagesListAsUiModels
         )
     }
@@ -110,7 +111,6 @@ class ImagesListViewModel(
                 }
             }
             ImagesListActions.OnRefresh -> loadImages()
-            ImagesListActions.OnLoadImages -> loadImages()
         }
     }
 
@@ -121,13 +121,13 @@ class ImagesListViewModel(
             }
 
             imagesRepository
-                .fetchImagesFromTheServer(category = category)
+                .loadImagesFromTheServer(category = category)
 //                .fetchImagesFromTheServer(category = ImagesCategories.ISLANDS)
                 .onSuccess {
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
-                            isDataReceivedSuccessfully = true
+                            areImagesReceivedSuccessfully = true
                         )
                     }
                 }
@@ -135,7 +135,7 @@ class ImagesListViewModel(
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
-                            isDataReceivedSuccessfully = false
+                            areImagesReceivedSuccessfully = false
                         )
                     }
                     eventChannel.send(

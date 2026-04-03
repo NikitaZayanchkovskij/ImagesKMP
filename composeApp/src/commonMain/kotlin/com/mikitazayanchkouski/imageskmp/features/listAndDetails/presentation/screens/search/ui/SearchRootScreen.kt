@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -32,10 +33,11 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.I
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.imagesListScreen.components.ImagesListCardItem
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListEvents
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListState
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.ui.components.ImagesSearchBar
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchForImagesViewModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchScreenActions
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchScreenEvents
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchScreenState
 import imageskmp.composeapp.generated.resources.Res
 import imageskmp.composeapp.generated.resources.content_description_smiling_phone_icon
 import imageskmp.composeapp.generated.resources.icon_smiling_phone
@@ -45,121 +47,144 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ImagesListRoot(
-    category: ImagesCategories,
-    viewModel: ImagesListViewModel = koinViewModel(
-        key = category.inServerFormat,
-        parameters = { parametersOf(category) }
-    ),
-    onNavigateToImageDetails: (Long, Boolean) -> Unit,
-    onShowSnackBarErrorMessage: (String) -> Unit
+fun SearchRoot(
+    paddingValuesFromEntryRootScaffold: PaddingValues,
+    viewModel: SearchForImagesViewModel = koinViewModel(),
+    onNavigateToImageDetails: (Long, Boolean) -> Unit
 ) {
-    val imagesState by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
     ObserveAsOneTimeEvents(flow = viewModel.events) { event ->
         when (event) {
-            is ImagesListEvents.OnNavigateToImageDetails -> {
-                /* False here is needed to pass the information, that we are
-                 * opening the details screen NOT from the search screen.
+            is SearchScreenEvents.OnImageLoadingFailed -> {
+                scope.launch {
+                    val errorMessageAsString = getString(resource = event.message)
+                    println("Show snack bar error message: $errorMessageAsString")
+                }
+            }
+
+            is SearchScreenEvents.OnNavigateToImageDetails -> {
+                /* True here is needed to pass the information, that we are
+                 * opening the details screen from the search screen.
                  * To properly decide in ImageDetailsViewModel, from where to load the image.
                  * I'm not caching searched images, so if we
                  * open details from the search screen - I need to load the image from the server,
                  * and not from the local cache.
                  */
-                onNavigateToImageDetails(event.imageId, false)
+                onNavigateToImageDetails(event.imageId, true)
             }
 
-            is ImagesListEvents.OnImagesLoadingFailed -> {
+            is SearchScreenEvents.OnShowUserInfoMessage -> {
                 scope.launch {
-                    val errorMessageAsString = getString(resource = event.message)
-                    onShowSnackBarErrorMessage(errorMessageAsString)
+                    val infoMessageAsString = getString(resource = event.message)
+                    println("Show snack bar info message: $infoMessageAsString")
                 }
             }
         }
     }
 
-    ImagesListScreen(
-        imagesState = imagesState,
+    SearchScreen(
+        paddingValues = paddingValuesFromEntryRootScaffold,
+        state = state,
         onUserAction = viewModel::onUserAction
     )
 }
 
 @Composable
-private fun ImagesListScreen(
-    imagesState: ImagesListState,
-    onUserAction: (ImagesListActions) -> Unit
+private fun SearchScreen(
+    paddingValues: PaddingValues,
+    state: SearchScreenState,
+    onUserAction: (SearchScreenActions) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
-    if (imagesState.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(size = 50.dp),
-                color = colorScheme.primary
-            )
-        }
-    } else {
-        if (imagesState.imagesList.isEmpty()) {
-            Column(
+    Column(
+        modifier = Modifier
+            .padding(paddingValues = paddingValues)
+            .fillMaxSize()
+            .padding(horizontal = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 10.dp,
+            alignment = Alignment.Top
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ImagesSearchBar(
+            modifier = Modifier.fillMaxWidth(),
+            state = state.searchQueryState,
+            onSearchPressed = {
+                onUserAction(SearchScreenActions.OnSearchClicked)
+            }
+        )
+        if (state.isLoading) {
+            Box(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    modifier = Modifier.size(size = 200.dp),
-                    painter = painterResource(
-                        resource = Res.drawable.icon_smiling_phone
-                    ),
-                    contentDescription = stringResource(
-                        resource = Res.string.content_description_smiling_phone_icon
-                    ),
-                    alignment = Alignment.Center,
-                    colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
-                )
-                Text(
-                    text = stringResource(
-                        resource = Res.string.smiling_phone_icon_message
-                    ),
-                    color = colorScheme.onBackground,
-                    style = typography.bodyMedium
+                CircularProgressIndicator(
+                    modifier = Modifier.size(size = 50.dp),
+                    color = colorScheme.primary
                 )
             }
         } else {
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                columns = StaggeredGridCells.Fixed(count = 2),
-                verticalItemSpacing = 10.dp,
-                horizontalArrangement = Arrangement.spacedBy(
-                    space = 10.dp,
-                    alignment = Alignment.CenterHorizontally
-                ),
-                contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
-            ) {
-                items(
-                    items = imagesState.imagesList,
-                    key = { image -> "${image.imageId}${image.imageCategory}" }
-                ) { imageUiModel ->
-                    ImagesListCardItem(
-                        imageId = imageUiModel.imageId,
-                        imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
-                        imageDescription = imageUiModel.description,
-                        photographerName = imageUiModel.photographerName,
-                        onImageClick = { imageId ->
-                            onUserAction(
-                                ImagesListActions.OnNavigateToImageDetails(imageId = imageId)
-                            )
-                        }
+            if (state.imagesList.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier.size(size = 200.dp),
+                        painter = painterResource(
+                            resource = Res.drawable.icon_smiling_phone
+                        ),
+                        contentDescription = stringResource(
+                            resource = Res.string.content_description_smiling_phone_icon
+                        ),
+                        alignment = Alignment.Center,
+                        colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
                     )
+                    Text(
+                        text = stringResource(
+                            resource = Res.string.smiling_phone_icon_message
+                        ),
+                        color = colorScheme.onBackground,
+                        style = typography.bodyMedium
+                    )
+                }
+            } else {
+                LazyVerticalStaggeredGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 10.dp),
+                    columns = StaggeredGridCells.Fixed(count = 2),
+                    verticalItemSpacing = 10.dp,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = 10.dp,
+                        alignment = Alignment.CenterHorizontally
+                    ),
+                    contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
+                ) {
+                    items(
+                        items = state.imagesList,
+                        key = { image -> "${image.imageId}${image.imageCategory}" }
+                    ) { imageUiModel ->
+                        ImagesListCardItem(
+                            imageId = imageUiModel.imageId,
+                            imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
+                            imageDescription = imageUiModel.description,
+                            photographerName = imageUiModel.photographerName,
+                            onImageClick = { imageId ->
+                                onUserAction(
+                                    SearchScreenActions.OnNavigateToImageDetails(imageId = imageId)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -181,17 +206,18 @@ private fun ImagesListScreen(
     device = Devices.PIXEL_TABLET
 )
 @Composable
-private fun ImagesListScreenPreview() {
+private fun CuratedImagesScreenPreview() {
     ImagesAppTheme {
         Surface {
-            ImagesListScreen(
-                imagesState = ImagesListState(
+            SearchScreen(
+                paddingValues = PaddingValues(all = 0.dp),
+                state = SearchScreenState(
                     isLoading = false,
                     areImagesReceivedSuccessfully = true,
                     imagesList = (1..10).map { index ->
                         ImageUiModel(
                             imageId = index.toLong(),
-                            imageCategory = ImagesCategories.ISLANDS,
+                            imageCategory = ImagesCategories.SEARCH,
                             isInBookmarks = false,
                             width = 3024,
                             height = 3024,

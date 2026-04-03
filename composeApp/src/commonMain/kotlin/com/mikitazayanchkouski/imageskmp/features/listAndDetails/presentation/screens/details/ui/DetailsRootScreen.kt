@@ -51,9 +51,18 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun DetailsRoot(
     imageId: Long,
+
+    /* I need this check to identify, do I need to load the image from the cache
+     * (from the database) in the view model, or to load it remotely, from the server.
+     * Because searched images are not been saved locally.
+     */
+    isThisScreenOpenedFromSearchScreen: Boolean,
+
     viewModel: ImageDetailsViewModel = koinViewModel(
         key = imageId.toString(),
-        parameters = { parametersOf(imageId) }
+        parameters = {
+            parametersOf(imageId, isThisScreenOpenedFromSearchScreen)
+        }
     ),
     onNavigateBackToListScreen: () -> Unit
 ) {

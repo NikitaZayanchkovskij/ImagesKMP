@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeRoot(
     paddingValuesFromEntryRootScaffold: PaddingValues,
-    onNavigateToImageDetails: (Long) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     HomeScreen(
@@ -42,7 +42,7 @@ fun HomeRoot(
 @Composable
 private fun HomeScreen(
     paddingValues: PaddingValues,
-    onNavigateToImageDetails: (Long) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     val pagerState = rememberPagerState { ImagesCategories.entries.size }
@@ -89,9 +89,7 @@ private fun HomeScreen(
         ) { tabIndex ->
             ImagesListRoot(
                 category = ImagesCategories.entries[tabIndex],
-                onNavigateToImageDetails = { imageId ->
-                    onNavigateToImageDetails(imageId)
-                },
+                onNavigateToImageDetails = onNavigateToImageDetails,
                 onShowSnackBarErrorMessage = { message ->
                     onShowSnackBarMessage(message)
                 }
@@ -121,7 +119,7 @@ private fun HomeScreenPreview() {
         Surface {
             HomeScreen(
                 paddingValues = PaddingValues(all = 0.dp),
-                onNavigateToImageDetails = { imageId -> },
+                onNavigateToImageDetails = { imageId, openedFromSearchScreen -> },
                 onShowSnackBarMessage = { message -> }
             )
         }

@@ -50,6 +50,7 @@
     <string name="sunny_morning_category">Солнечное утро</string>
     <string name="ocean_category">Океан</string>
     <string name="space_category">Космос</string>
+    <string name="search_category">Поиск</string>
 
     <string name="content_description_icon_arrow_back">Кнопка вернуться назад</string>
     <string name="content_description_icon_share">Кнопка поделиться изображением</string>
@@ -63,5 +64,11 @@
 
     <string name="add_to_bookmarks_title">Добавить в Закладки</string>
     <string name="remove_from_bookmarks_title">Удалить из Закладок</string>
+
+    <string name="search_query_is_empty_info_message">Поисковый запрос не может быть пустым. Пожалуйста, введите интересующую категорию изображений.</string>
+    <string name="content_description_search_bar_icon">Найдите изображения</string>
+    <string name="search_bar_hint">Найдите изображения</string>
+    <string name="response_for_image_search_is_empty">Похоже нет изображений, соответствующих вашему запросу. Пожалуйста, попробуйте найти что-нибудь другое.</string>
+
 
 </resources>

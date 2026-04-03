@@ -5,13 +5,20 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface NavGraphRoutes {
     @Serializable
-    data object RootScreen: NavGraphRoutes
+    data object RootScreen : NavGraphRoutes
+
     @Serializable
-    data object HomeScreen: NavGraphRoutes
+    data object HomeScreen : NavGraphRoutes
+
     @Serializable
-    data class DetailsScreen(val imageId: Long): NavGraphRoutes
+    data class DetailsScreen(
+        val imageId: Long,
+        val isThisScreenOpenedFromSearchScreen: Boolean
+    ) : NavGraphRoutes
+
     @Serializable
-    data object SearchScreen: NavGraphRoutes
+    data object SearchScreen : NavGraphRoutes
+
     @Serializable
-    data object BookmarksScreen: NavGraphRoutes
+    data object BookmarksScreen : NavGraphRoutes
 }

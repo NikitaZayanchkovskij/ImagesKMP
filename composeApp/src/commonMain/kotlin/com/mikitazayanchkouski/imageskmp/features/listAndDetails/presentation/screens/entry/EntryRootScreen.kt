@@ -90,10 +90,15 @@ fun EntryRootScreen(
         BottomNavigationBarGraph(
             paddingValues = paddingValues,
             navController = bottomBarNavHostController,
-            onNavigateToImageDetails = { imageId ->
+            onNavigateToImageDetails = { imageId, isOpenedFromSearchScreen ->
                 rootScreenNavHostController.navigate(
-                    route = NavGraphRoutes.DetailsScreen(imageId = imageId)
-                )
+                    route = NavGraphRoutes.DetailsScreen(
+                        imageId = imageId,
+                        isThisScreenOpenedFromSearchScreen = isOpenedFromSearchScreen
+                    )
+                ) {
+                    launchSingleTop = true
+                }
             },
             onShowSnackBarMessage = { message ->
                 scope.launch {

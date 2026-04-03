@@ -4,6 +4,6 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mo
 
 data class ImagesListState(
     val isLoading: Boolean = false,
-    val isDataReceivedSuccessfully: Boolean = false,
+    val areImagesReceivedSuccessfully: Boolean = false,
     val imagesList: List<ImageUiModel> = emptyList()
 )
