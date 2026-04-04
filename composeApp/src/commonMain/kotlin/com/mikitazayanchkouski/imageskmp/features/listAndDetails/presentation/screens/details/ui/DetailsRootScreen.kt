@@ -54,7 +54,7 @@ fun DetailsRoot(
 
     /* I need this check to identify, do I need to load the image from the cache
      * (from the database) in the view model, or to load it remotely, from the server.
-     * Because searched images are not been saved locally.
+     * Because searched images are not been saved locally (not been cached).
      */
     isThisScreenOpenedFromSearchScreen: Boolean,
 
@@ -74,11 +74,9 @@ fun DetailsRoot(
             is ImageDetailsEvents.OnImageLoadingFailed -> {
                 scope.launch {
                     val errorMessage = getString(resource = event.message)
-//                    onShowSnackBarErrorMessage(errorMessage)
                     println("ERROR: $errorMessage")
                 }
             }
-
             ImageDetailsEvents.OnNavigateBack -> onNavigateBackToListScreen()
         }
     }

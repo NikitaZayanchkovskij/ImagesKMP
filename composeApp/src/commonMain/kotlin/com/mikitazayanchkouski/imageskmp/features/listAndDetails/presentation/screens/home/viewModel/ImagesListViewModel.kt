@@ -71,7 +71,6 @@ class ImagesListViewModel(
     val state = combine(
         flow = _state,
         flow2 = imagesRepository.getImagesFromTheDatabase(category = category)
-//        flow2 = imagesRepository.getImagesFromTheDatabase(category = ImagesCategories.ISLANDS)
     ) { currentImagesState, databaseDomainModels ->
         val imagesListAsUiModels = databaseDomainModels.map { domainModel ->
             domainModel.mapToUiModel()
@@ -122,8 +121,7 @@ class ImagesListViewModel(
 
             imagesRepository
                 .loadImagesFromTheServer(category = category)
-//                .fetchImagesFromTheServer(category = ImagesCategories.ISLANDS)
-                .onSuccess {
+                .onSuccess { _ ->
                     _state.update { model ->
                         model.copy(
                             isLoading = false,

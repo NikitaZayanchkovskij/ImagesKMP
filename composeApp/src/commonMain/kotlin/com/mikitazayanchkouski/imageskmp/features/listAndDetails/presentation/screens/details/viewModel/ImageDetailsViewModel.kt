@@ -106,11 +106,12 @@ class ImageDetailsViewModel(
                     .getImageFromCacheById(imageId = imageId)
                     .collect { imageDomainModel ->
                         if (imageDomainModel != null) {
+                            val imageUiModel = imageDomainModel.mapToUiModel()
                             _state.update { model ->
                                 model.copy(
                                     isLoading = false,
                                     isImageLoadedSuccessfully = true,
-                                    image = imageDomainModel.mapToUiModel()
+                                    image = imageUiModel
                                 )
                             }
                         } else {

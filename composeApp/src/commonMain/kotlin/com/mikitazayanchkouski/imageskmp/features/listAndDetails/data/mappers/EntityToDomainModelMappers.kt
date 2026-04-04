@@ -25,7 +25,7 @@ fun JoinBookmarkWithImage.mapToDomainModel(): ImageDomainModel {
     )
 }
 
-fun ImageEntity.mapToDomainModel(category: String): ImageDomainModel {
+fun ImageEntity.mapToDomainModel(): ImageDomainModel {
     return ImageDomainModel(
         imageId = imageId,
         imageCategory = mapImageCategoryFromStringToEnum(category = imageCategory),

@@ -1,6 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.di
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.viewModel.BookmarksViewModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.viewModel.ImageDetailsViewModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListViewModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.viewModel.SearchForImagesViewModel
@@ -23,5 +24,8 @@ val commonPresentationModule = module {
     }
     viewModel<SearchForImagesViewModel> {
         SearchForImagesViewModel(imagesRepository = get<ImagesRepository>())
+    }
+    viewModel<BookmarksViewModel> {
+        BookmarksViewModel(imagesRepository = get<ImagesRepository>())
     }
 }

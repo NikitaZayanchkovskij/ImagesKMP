@@ -149,6 +149,17 @@ interface ImagesDao {
     /* @Transaction is needed for @Relation queries.
      * It also means, that this function will only make changes,
      * if ALL queries succeed.
+     *
+     * GROUP BY handles uniqueness.
+     * Because theoretically, images with the same id, can be present in multiple
+     * categories (for example image of a tropical beach in nature and islands category),
+     * because of GROUP BY - it will return only one image.
+     * (Either from Nature, or from Islands)
+     *
+     * Because we are using @Relation, when we call getBookmarkedImages(),
+     * Room automatically performs the necessary logic, to look up the ImageEntity,
+     * for every BookmarkedImageEntity found.
+     * And returns them as a list of JoinBookmarkWithImage objects.
      */
     @Transaction
     @Query("SELECT * FROM bookmarkedimageentity GROUP BY imageId")

@@ -20,15 +20,14 @@ interface ImagesRepository {
     suspend fun loadImagesFromTheServer(category: ImagesCategories): CustomResult<ImagesListDomainModel, DataError.Remote>
 
     /** Our UI and ViewModel will simply listen to this function,
-     * to get the most up to date, offline first, images data.
+     * to get the most up to date images data.
      */
     fun getImagesFromTheDatabase(category: ImagesCategories): Flow<List<ImageDomainModel>>
+
     fun getImageFromCacheById(imageId: Long): Flow<ImageDomainModel?>
     suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories)
     suspend fun deleteImageFromBookmarks(imageId: Long)
     suspend fun loadSearchedImages(searchQuery: String): CustomResult<ImagesListDomainModel, DataError.Remote>
     suspend fun loadSearchedImageById(imageId: String): CustomResult<ImageDomainModel, DataError.Remote>
-
-    /** Used in the BookmarksScreen to get bookmarks. */
     fun getBookmarks(): Flow<List<ImageDomainModel>>
 }

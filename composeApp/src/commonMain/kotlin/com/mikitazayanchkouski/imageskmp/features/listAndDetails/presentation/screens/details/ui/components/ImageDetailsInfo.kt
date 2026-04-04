@@ -65,7 +65,7 @@ fun ImageDetailsInfo(
     ) {
         Text(
             text = "$categoryTitle: $categoryName",
-            style = typography.titleLarge,
+            style = typography.titleMedium,
             color = colorScheme.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -81,7 +81,7 @@ fun ImageDetailsInfo(
         )
         Text(
             text = imageDescription,
-            color = colorScheme.onSurface,
+            color = colorScheme.onSurfaceVariant,
             style = typography.bodyMedium,
             textAlign = TextAlign.Start,
             maxLines = 6,

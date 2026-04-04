@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.BookmarksRoot
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.ui.BookmarksRoot
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.ui.rootScreen.HomeRoot
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.search.ui.SearchRoot
 
@@ -35,7 +35,7 @@ fun BottomNavigationBarGraph(
         }
         composable<NavGraphRoutes.BookmarksScreen> {
             BookmarksRoot(
-                paddingValuesFromRootScaffold = paddingValues,
+                paddingValuesFromEntryRootScaffold = paddingValues,
                 onNavigateToImageDetails = onNavigateToImageDetails
             )
         }
