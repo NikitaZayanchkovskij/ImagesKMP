@@ -64,23 +64,25 @@ private fun HomeScreen(
             edgePadding = 10.dp,
         ) {
             ImagesCategories.entries.forEachIndexed { index, category ->
-                val isTabSelected = (index == currentTabIndex)
+                if (category != ImagesCategories.SEARCH) {
+                    val isTabSelected = (index == currentTabIndex)
 
-                Tab(
-                    selected = isTabSelected,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(page = index)
+                    Tab(
+                        selected = isTabSelected,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(page = index)
+                            }
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(resource = category.titleForTheUi),
+                                color = if (isTabSelected) colorScheme.primary else colorScheme.onBackground,
+                                style = typography.titleSmall
+                            )
                         }
-                    },
-                    text = {
-                        Text(
-                            text = stringResource(resource = category.titleForTheUi),
-                            color = if (isTabSelected) colorScheme.primary else colorScheme.onBackground,
-                            style = typography.titleSmall
-                        )
-                    }
-                )
+                    )
+                }
             }
         }
         HorizontalPager(

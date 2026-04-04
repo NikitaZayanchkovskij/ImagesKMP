@@ -1,15 +1,14 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers
 
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageSrcEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageResolutionsDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageResolutionsUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 
-fun ImageDomainModel.mapToEntity(): ImageEntity {
-    return ImageEntity(
-        imageUniqueKey = "$imageId${imageCategory.inServerFormat}",
+fun ImageUiModel.mapToDomainModel(): ImageDomainModel {
+    return ImageDomainModel(
         imageId = imageId,
-        imageCategory = imageCategory.inServerFormat,
+        imageCategory = imageCategory,
         isInBookmarks = isInBookmarks,
         width = width,
         height = height,
@@ -18,14 +17,14 @@ fun ImageDomainModel.mapToEntity(): ImageEntity {
         photographerUrl = photographerUrl,
         photographerId = photographerId,
         avgColor = avgColor,
-        imageResolutions = imageResolutions.mapToEntity(),
+        imageResolutions = imageResolutions.mapToDomainModel(),
         liked = liked,
         description = description
     )
 }
 
-fun ImageResolutionsDomainModel.mapToEntity(): ImageSrcEntity {
-    return ImageSrcEntity(
+fun ImageResolutionsUiModel.mapToDomainModel(): ImageResolutionsDomainModel {
+    return ImageResolutionsDomainModel(
         original = original,
         large2x = large2x,
         large = large,

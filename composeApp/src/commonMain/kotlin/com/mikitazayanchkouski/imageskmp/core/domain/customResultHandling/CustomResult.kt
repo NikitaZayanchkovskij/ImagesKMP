@@ -10,8 +10,6 @@ package com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling
  * For example: { "error": "Your password has no special character" }
  * In this case, the generic error is for example this class:
  * PasswordErrorDto(val error: String)
- *
- * TODO: ADD comment about out keyword
  */
 sealed interface CustomResult<out Data, out Error : CustomError> {
     data class Success<out Data>(val data: Data) : CustomResult<Data, Nothing>

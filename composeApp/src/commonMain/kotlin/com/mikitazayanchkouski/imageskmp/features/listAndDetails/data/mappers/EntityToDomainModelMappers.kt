@@ -4,14 +4,14 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageSrcEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.JoinBookmarkWithImage
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageResolutionsDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 
-fun JoinBookmarkWithImage.mapToDomainModel(): ImageDomainModel {
+fun JoinBookmarkWithImage.mapToDomainModel(isInBookmarks: Boolean): ImageDomainModel {
     return ImageDomainModel(
         imageId = image.imageId,
         imageCategory = mapImageCategoryFromStringToEnum(category = image.imageCategory),
-        isInBookmarks = image.isInBookmarks,
+        isInBookmarks = isInBookmarks,
         width = image.width,
         height = image.height,
         imageUrl = image.imageUrl,
@@ -43,8 +43,8 @@ fun ImageEntity.mapToDomainModel(): ImageDomainModel {
     )
 }
 
-private fun ImageSrcEntity.mapToDomainModel(): ImageSrcDomainModel {
-    return ImageSrcDomainModel(
+private fun ImageSrcEntity.mapToDomainModel(): ImageResolutionsDomainModel {
+    return ImageResolutionsDomainModel(
         original = original,
         large2x = large2x,
         large = large,
@@ -65,6 +65,7 @@ private fun mapImageCategoryFromStringToEnum(category: String): ImagesCategories
         ImagesCategories.SUNNY_MORNING.inServerFormat -> ImagesCategories.SUNNY_MORNING
         ImagesCategories.OCEAN.inServerFormat -> ImagesCategories.OCEAN
         ImagesCategories.SPACE.inServerFormat -> ImagesCategories.SPACE
+        ImagesCategories.SEARCH.inServerFormat -> ImagesCategories.SEARCH
         else -> ImagesCategories.CURATED
     }
 }

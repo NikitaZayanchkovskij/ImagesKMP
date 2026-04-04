@@ -61,6 +61,7 @@ class BookmarksViewModel(
                     val imagesListAsUiModels = listOfDomainModels.map { domainModel ->
                         domainModel.mapToUiModel()
                     }
+
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
@@ -72,7 +73,8 @@ class BookmarksViewModel(
                     _state.update { model ->
                         model.copy(
                             isLoading = false,
-                            areImagesReceivedSuccessfully = false
+                            areImagesReceivedSuccessfully = false,
+                            imagesList = emptyList()
                         )
                     }
                 }

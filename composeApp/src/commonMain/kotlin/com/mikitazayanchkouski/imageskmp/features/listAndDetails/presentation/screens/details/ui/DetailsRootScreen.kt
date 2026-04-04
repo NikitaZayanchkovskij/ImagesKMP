@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
 import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTimeEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageResolutionsUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components.ImageDetailsInfo
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components.ImageHeaderCard
@@ -186,7 +186,7 @@ private fun DetailsScreen(
     device = Devices.PIXEL_TABLET
 )
 @Composable
-private fun CuratedImagesScreenPreview() {
+private fun DetailsScreenPreview() {
     ImagesAppTheme {
         Surface {
             DetailsScreen(
@@ -204,7 +204,7 @@ private fun CuratedImagesScreenPreview() {
                         photographerUrl = "https://www.pexels.com/@joey",
                         photographerId = 680589,
                         avgColor = "#978E82",
-                        imageResolutions = ImageSrcUiModel(
+                        imageResolutions = ImageResolutionsUiModel(
                             original = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
                             large2x = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             large = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",

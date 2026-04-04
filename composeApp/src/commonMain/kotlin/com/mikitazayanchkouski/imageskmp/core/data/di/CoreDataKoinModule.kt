@@ -30,7 +30,7 @@ val commonCoreDataModule = module {
         KtorRemoteImagesDataSource(httpClient = get<HttpClient>())
     }
     single<LocalImagesDataSource> {
-        RoomLocalImagesDataSource(imagesDataBase = get<ImagesDatabase>())
+        RoomLocalImagesDataSource(imagesDatabase = get<ImagesDatabase>())
     }
     single<HttpClient> {
         HttpClientFactory(pexelsLogger = get<PexelsLogger>())

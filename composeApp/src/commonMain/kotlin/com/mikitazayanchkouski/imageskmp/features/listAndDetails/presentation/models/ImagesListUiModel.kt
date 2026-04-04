@@ -2,7 +2,6 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.m
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 
-// TODO: Later check, which parameters I need, and which I don't
 data class ImagesListUiModel(
     val totalResults: Int,
     val pageNumber: Int,
@@ -24,12 +23,12 @@ data class ImageUiModel(
     val photographerUrl: String,
     val photographerId: Long,
     val avgColor: String,
-    val imageResolutions: ImageSrcUiModel,
+    val imageResolutions: ImageResolutionsUiModel,
     val liked: Boolean,
     val description: String
 )
 
-data class ImageSrcUiModel(
+data class ImageResolutionsUiModel(
     val original: String,
     val large2x: String,
     val large: String,

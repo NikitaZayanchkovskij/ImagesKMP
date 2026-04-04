@@ -2,9 +2,9 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.m
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageResolutionsDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageSrcUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageResolutionsUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
 
 fun ImagesListDomainModel.mapToUiModel(): ImagesListUiModel {
@@ -39,8 +39,8 @@ fun ImageDomainModel.mapToUiModel(): ImageUiModel {
     )
 }
 
-fun ImageSrcDomainModel.mapToUiModel(): ImageSrcUiModel {
-    return ImageSrcUiModel(
+fun ImageResolutionsDomainModel.mapToUiModel(): ImageResolutionsUiModel {
+    return ImageResolutionsUiModel(
         original = original,
         large2x = large2x,
         large = large,

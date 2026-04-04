@@ -21,12 +21,12 @@ data class ImageDomainModel(
     val photographerUrl: String,
     val photographerId: Long,
     val avgColor: String,
-    val imageResolutions: ImageSrcDomainModel,
+    val imageResolutions: ImageResolutionsDomainModel,
     val liked: Boolean,
     val description: String
 )
 
-data class ImageSrcDomainModel(
+data class ImageResolutionsDomainModel(
     val original: String,
     val large2x: String,
     val large: String,

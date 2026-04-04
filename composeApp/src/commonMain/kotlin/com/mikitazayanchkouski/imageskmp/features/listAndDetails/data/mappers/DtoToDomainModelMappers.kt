@@ -4,7 +4,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImageResolutionsDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.models.ImagesListDto
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageSrcDomainModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageResolutionsDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 
@@ -40,8 +40,8 @@ fun ImageDto.mapToDomainModel(category: ImagesCategories): ImageDomainModel {
     )
 }
 
-fun ImageResolutionsDto.mapToDomainModel(): ImageSrcDomainModel {
-    return ImageSrcDomainModel(
+fun ImageResolutionsDto.mapToDomainModel(): ImageResolutionsDomainModel {
+    return ImageResolutionsDomainModel(
         original = original,
         large2x = large2x,
         large = large,

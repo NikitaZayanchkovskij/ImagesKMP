@@ -64,11 +64,13 @@ fun ImageDetailsInfo(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
+            modifier = Modifier.fillMaxWidth(),
             text = "$categoryTitle: $categoryName",
             style = typography.titleMedium,
             color = colorScheme.onSurfaceVariant,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
         )
         PhotographerInfo(
             photographerName = photographerName,

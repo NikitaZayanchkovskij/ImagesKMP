@@ -31,7 +31,8 @@ class OfflineFirstImagesRepository(
         return remoteDataSource
             .loadImages(category = category)
             .onSuccess { imagesListDomainModel ->
-                val imagesToInsertInTheDatabase = imagesListDomainModel.listOfImages.map { domainModel ->
+                val imagesToInsertInTheDatabase =
+                    imagesListDomainModel.listOfImages.map { domainModel ->
                         domainModel.mapToEntity()
                     }
 
@@ -50,8 +51,18 @@ class OfflineFirstImagesRepository(
         return localDataSource.getImageFromCacheById(imageId = imageId)
     }
 
-    override suspend fun addImageToBookmarks(imageId: Long, imageCategory: ImagesCategories) {
-        localDataSource.addImageToBookmarks(imageId = imageId, imageCategory = imageCategory)
+    override suspend fun addImageToBookmarksAndSyncStatusInCache(
+        imageId: Long,
+        imageCategory: ImagesCategories
+    ) {
+        localDataSource.addImageToBookmarksAndSyncStatusInCache(
+            imageId = imageId,
+            imageCategory = imageCategory
+        )
+    }
+
+    override suspend fun addImageToCacheAndToBookmarks(image: ImageDomainModel) {
+        localDataSource.addImageToCacheAndToBookmarks(image = image)
     }
 
     override suspend fun deleteImageFromBookmarks(imageId: Long) {
@@ -68,5 +79,9 @@ class OfflineFirstImagesRepository(
 
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {
         return localDataSource.getBookmarks()
+    }
+
+    override fun getImageFromBookmarksById(imageId: Long): Flow<ImageDomainModel?> {
+        return localDataSource.getImageFromBookmarksById(imageId = imageId)
     }
 }

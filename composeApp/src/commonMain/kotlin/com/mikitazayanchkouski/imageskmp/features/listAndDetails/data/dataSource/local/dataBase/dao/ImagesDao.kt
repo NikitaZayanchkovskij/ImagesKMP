@@ -81,7 +81,8 @@ interface ImagesDao {
          * To not clog up the database, and keep it in sync.
          */
         val oldLocalImagesInCacheIds = localImagesInCache.map { imageEntity -> imageEntity.imageId }
-        val upToDateServerImagesIds = serverImages.map { imageEntity -> imageEntity.imageId }.toSet()
+        val upToDateServerImagesIds =
+            serverImages.map { imageEntity -> imageEntity.imageId }.toSet()
 
         val outdatedImagesIds = oldLocalImagesInCacheIds.filter { oldImageId ->
             oldImageId !in upToDateServerImagesIds
@@ -95,9 +96,6 @@ interface ImagesDao {
     @Upsert
     suspend fun upsertImagesToCache(images: List<ImageEntity>)
 
-    @Query("DELETE FROM imageentity WHERE imageCategory = :imageCategory")
-    suspend fun deleteImagesFromCacheByCategory(imageCategory: String)
-
     @Query("SELECT * FROM imageentity WHERE imageCategory = :imageCategory ORDER BY imageId ASC")
     fun getImagesFromCacheByCategory(imageCategory: String): Flow<List<ImageEntity>>
 
@@ -107,15 +105,27 @@ interface ImagesDao {
     @Query("SELECT * FROM imageentity WHERE imageId = :imageId LIMIT 1")
     fun getImageFromCacheById(imageId: Long): Flow<ImageEntity?>
 
-    @Query("DELETE FROM imageentity")
-    suspend fun clearAllImagesInCache()
-
-    @Transaction
-    suspend fun insertImageToBookmarksAndSyncCache(bookmark: BookmarkedImageEntity) {
+    @Transaction // Ensures all happen, or neither happens.
+    suspend fun addImageToBookmarksAndSyncStatusInCache(bookmark: BookmarkedImageEntity) {
         upsertImageToBookmarks(bookmark = bookmark)
         updateIsImageInBookmarksStatusInCache(
             isInBookmarks = true,
             imageId = bookmark.imageId
+        )
+    }
+
+    @Transaction // Ensures all happen, or neither happens.
+    suspend fun addImageToCacheAndToBookmarks(image: ImageEntity) {
+        upsertImagesToCache(images = listOf(element = image))
+        upsertImageToBookmarks(
+            bookmark = BookmarkedImageEntity(
+                imageUniqueKey = "${image.imageId}${image.imageCategory}",
+                imageId = image.imageId
+            )
+        )
+        updateIsImageInBookmarksStatusInCache(
+            isInBookmarks = true,
+            imageId = image.imageId
         )
     }
 
@@ -165,25 +175,9 @@ interface ImagesDao {
     @Query("SELECT * FROM bookmarkedimageentity GROUP BY imageId")
     fun getBookmarkedImages(): Flow<List<JoinBookmarkWithImage>>
 
-    @Query("SELECT imageId FROM imageentity WHERE imageCategory = :category")
-    suspend fun getCachedImagesIdsByCategory(category: String): List<Long>
-
-    @Query("SELECT imageId FROM BookmarkedImageEntity")
-    suspend fun getBookmarkedImagesIds(): List<Long>
-
-    @Query("DELETE FROM bookmarkedimageentity")
-    suspend fun clearAllImagesInBookmarks()
-
-//    @Transaction
-//    suspend fun deleteImagesByIds(ids: List<Long>) {
-//        ids.forEach { imageId ->
-//            deleteImageById(id = imageId)
-//        }
-//    }
+    @Query("SELECT * FROM bookmarkedimageentity WHERE imageId = :imageId LIMIT 1")
+    fun getImageFromBookmarksById(imageId: Long): Flow<JoinBookmarkWithImage?>
 
     @Query("DELETE FROM imageentity WHERE imageId IN (:ids)")
     suspend fun deleteImagesByIds(ids: List<Long>)
-
-    @Query("DELETE FROM imageentity WHERE imageId =:id")
-    suspend fun deleteImageById(id: Long)
 }
