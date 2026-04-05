@@ -89,6 +89,7 @@ private fun HomeScreen(
             beyondViewportPageCount = 3,
             state = pagerState
         ) { tabIndex ->
+            // индекс 7 это Search
             ImagesListRoot(
                 category = ImagesCategories.entries[tabIndex],
                 onNavigateToImageDetails = onNavigateToImageDetails,

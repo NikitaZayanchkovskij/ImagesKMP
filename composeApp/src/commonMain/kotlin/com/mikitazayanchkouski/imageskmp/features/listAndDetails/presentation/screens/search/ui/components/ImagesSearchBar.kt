@@ -2,8 +2,10 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -36,6 +38,7 @@ fun ImagesSearchBar(
         modifier = modifier,
         state = state,
         textStyle = typography.bodyMedium,
+        lineLimits = TextFieldLineLimits.SingleLine,
         shape = CircleShape,
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = colorScheme.surface,
@@ -51,14 +54,18 @@ fun ImagesSearchBar(
             unfocusedBorderColor = colorScheme.secondary
         ),
         leadingIcon = {
-            Icon(
-                painter = painterResource(
-                    resource = Res.drawable.icon_search_outlined
-                ),
-                contentDescription = stringResource(
-                    resource = Res.string.content_description_search_bar_icon
+            IconButton(
+                onClick = onSearchPressed
+            ) {
+                Icon(
+                    painter = painterResource(
+                        resource = Res.drawable.icon_search_outlined
+                    ),
+                    contentDescription = stringResource(
+                        resource = Res.string.content_description_search_bar_icon
+                    )
                 )
-            )
+            }
         },
         placeholder = {
             Text(

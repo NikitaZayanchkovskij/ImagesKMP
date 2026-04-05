@@ -63,14 +63,15 @@ fun ImagesListCardItem(
         horizontalAlignment = Alignment.Start
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(size = 20.dp)),
             contentAlignment = Alignment.BottomCenter
         ) {
             AsyncImage(
                 modifier = Modifier
                     .heightIn(min = randomImageHeight.dp)
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(size = 20.dp)),
+                    .fillMaxWidth(),
                 model = imageUrlInPortrait,
                 contentDescription = imageDescription,
                 alignment = Alignment.Center,
