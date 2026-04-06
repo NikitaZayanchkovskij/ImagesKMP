@@ -5,7 +5,7 @@ import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.DataEr
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.LocalImagesDataSource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.RemoteImagesDataSource
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToCacheEntity
 //import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
@@ -33,7 +33,7 @@ class OfflineFirstImagesRepository(
             .onSuccess { imagesListDomainModel ->
                 val imagesToInsertInTheDatabase =
                     imagesListDomainModel.listOfImages.map { domainModel ->
-                        domainModel.mapToEntity()
+                        domainModel.mapToCacheEntity()
                     }
 
                 localDataSource.upsertImagesAndSyncLocalAndRemoteCache(
@@ -51,22 +51,20 @@ class OfflineFirstImagesRepository(
         return localDataSource.getImageFromCacheById(imageId = imageId)
     }
 
-    override suspend fun addImageToBookmarksAndSyncStatusInCache(
-        imageId: Long,
-        imageCategory: ImagesCategories
-    ) {
-        localDataSource.addImageToBookmarksAndSyncStatusInCache(
-            imageId = imageId,
-            imageCategory = imageCategory
-        )
+    override suspend fun addImageToBookmarksAndSyncStatusInCache(image: ImageDomainModel) {
+        localDataSource.addImageToBookmarksAndSyncStatusInCache(image = image)
     }
 
-    override suspend fun addImageToCacheAndToBookmarks(image: ImageDomainModel) {
-        localDataSource.addImageToCacheAndToBookmarks(image = image)
+    override suspend fun addImageToBookmarks(image: ImageDomainModel) {
+        localDataSource.addImageToBookmarks(image = image)
     }
 
     override suspend fun deleteImageFromBookmarks(imageId: Long) {
         localDataSource.deleteImageFromBookmarks(imageId = imageId)
+    }
+
+    override suspend fun deleteImageFromBookmarksAndSyncCache(imageId: Long) {
+        localDataSource.deleteImageFromBookmarksAndSyncCache(imageId = imageId)
     }
 
     override suspend fun loadSearchedImages(searchQuery: String): CustomResult<ImagesListDomainModel, DataError.Remote> {

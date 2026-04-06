@@ -26,13 +26,13 @@ fun RootScreenNavigationGraph(
             val imageId = backStackEntry
                 .toRoute<NavGraphRoutes.DetailsScreen>()
                 .imageId
-            val isThisScreenOpenedFromSearchScreen = backStackEntry
+            val isItImageFromSearchCategory = backStackEntry
                 .toRoute<NavGraphRoutes.DetailsScreen>()
-                .isThisScreenOpenedFromSearchScreen
+                .isItImageFromSearchCategory
 
             DetailsRoot(
                 imageId = imageId,
-                isThisScreenOpenedFromSearchScreen = isThisScreenOpenedFromSearchScreen,
+                isItImageFromSearchCategory = isItImageFromSearchCategory,
                 onNavigateBackToListScreen = {
                     navHostController.popBackStack()
                 }

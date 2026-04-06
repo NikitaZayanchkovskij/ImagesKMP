@@ -1,10 +1,9 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local
 
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.ImagesDatabase
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.BookmarkedImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToBookmarkedEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.mappers.mapToEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import kotlinx.coroutines.flow.Flow
@@ -40,37 +39,37 @@ class RoomLocalImagesDataSource(
         }
     }
 
-    override suspend fun addImageToBookmarksAndSyncStatusInCache(
-        imageId: Long,
-        imageCategory: ImagesCategories
-    ) {
+    override suspend fun addImageToBookmarks(image: ImageDomainModel) {
+        val imageAsBookmarkedEntity = image.mapToBookmarkedEntity()
+        imagesDatabase.imagesDao.addImageToBookmarks(bookmark = imageAsBookmarkedEntity)
+    }
+
+    override suspend fun addImageToBookmarksAndSyncStatusInCache(image: ImageDomainModel) {
+        val imageAsBookmarkedEntity = image.mapToBookmarkedEntity()
         imagesDatabase.imagesDao.addImageToBookmarksAndSyncStatusInCache(
-            bookmark = BookmarkedImageEntity(
-                imageUniqueKey = "$imageId${imageCategory.inServerFormat}",
-                imageId = imageId
-            )
+            bookmark = imageAsBookmarkedEntity
         )
     }
 
-    override suspend fun addImageToCacheAndToBookmarks(image: ImageDomainModel) {
-        imagesDatabase.imagesDao.addImageToCacheAndToBookmarks(image = image.mapToEntity())
+    override suspend fun deleteImageFromBookmarks(imageId: Long) {
+        imagesDatabase.imagesDao.deleteImageFromBookmarks(imageId = imageId)
     }
 
-    override suspend fun deleteImageFromBookmarks(imageId: Long) {
+    override suspend fun deleteImageFromBookmarksAndSyncCache(imageId: Long) {
         imagesDatabase.imagesDao.deleteImageFromBookmarksAndSyncCache(imageId = imageId)
     }
 
     override fun getBookmarks(): Flow<List<ImageDomainModel>> {
         return imagesDatabase.imagesDao.getBookmarkedImages().map { listOfEntities ->
-            listOfEntities.map { joinBookmarkWithImageEntity ->
-                joinBookmarkWithImageEntity.mapToDomainModel(isInBookmarks = true)
+            listOfEntities.map { bookmarkedImageEntity ->
+                bookmarkedImageEntity.mapToDomainModel()
             }
         }
     }
 
     override fun getImageFromBookmarksById(imageId: Long): Flow<ImageDomainModel?> {
         return imagesDatabase.imagesDao.getImageFromBookmarksById(imageId = imageId).map { entity ->
-            entity?.mapToDomainModel(isInBookmarks = true)
+            entity?.mapToDomainModel()
         }
     }
 }

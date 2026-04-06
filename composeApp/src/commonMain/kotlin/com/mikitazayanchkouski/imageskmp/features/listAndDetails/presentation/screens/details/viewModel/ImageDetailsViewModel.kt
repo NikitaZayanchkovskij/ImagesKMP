@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onFailure
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
 import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringResource
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 class ImageDetailsViewModel(
     private val imagesRepository: ImagesRepository,
     private val imageId: Long,
-    private val wasDetailsOpenedFromSearchScreen: Boolean
+    private val isItImageFromSearchCategory: Boolean
 ) : ViewModel() {
     private val eventChannel = Channel<ImageDetailsEvents>()
     val events = eventChannel.receiveAsFlow()
@@ -49,44 +50,30 @@ class ImageDetailsViewModel(
                     eventChannel.send(element = ImageDetailsEvents.OnNavigateBack)
                 }
             }
+
             is ImageDetailsActions.OnSwitchIsInBookmarksState -> switchIsInBookmarksState()
         }
     }
 
-    /* TODO: Later I need to add the additional logic to this function.
-     * To not clog up the database (cache) with searched images.
-     *
-     * How it works now:
-     * If image details was opened from the search screen - I'm not caching images,
-     * that were searched, they only come from the server.
-     * But because my BookmarkedImageEntity is a parent of ImageEntity,
-     * and it uses foreignKeys - I need to first insert the image to cache,
-     * and then insert the image to the dedicated bookmarks table (BookmarkedImageEntity).
-     *
-     * But now, when I'm calling:
-     * imagesRepository.deleteImageFromBookmarks(imageId = image.imageId) - the image
-     * is been deleted only from bookmarks (from BookmarkedImageEntity),
-     * but not from the cache (from ImageEntity).
-     *
-     * And now it leads to the problem,
-     * that database (cache) will slowly clog up, because searched images
-     * from the cache are not been displayed anywhere in the app,
-     * and, for now, I don't have a dedicated "clear cache" button in the app.
-     */
     private fun switchIsInBookmarksState() {
         viewModelScope.launch {
             _state.value.image?.let { image ->
                 if (image.isInBookmarks) {
-                    imagesRepository.deleteImageFromBookmarks(imageId = image.imageId)
-                } else {
-                    if (wasDetailsOpenedFromSearchScreen) {
-                        val imageAsDomainModel = image.mapToDomainModel()
-                        imagesRepository.addImageToCacheAndToBookmarks(image = imageAsDomainModel)
+                    /* If an image is from SEARCH category, then,
+                     * according to my logic, images from SEARCH are not present in cache.
+                     */
+                    if (image.imageCategory == ImagesCategories.SEARCH) {
+                        imagesRepository.deleteImageFromBookmarks(imageId = image.imageId)
                     } else {
-                        imagesRepository.addImageToBookmarksAndSyncStatusInCache(
-                            imageId = image.imageId,
-                            imageCategory = image.imageCategory
-                        )
+                        imagesRepository.deleteImageFromBookmarksAndSyncCache(imageId = image.imageId)
+                    }
+                } else {
+                    if (isItImageFromSearchCategory) {
+                        val imageAsDomainModel = image.mapToDomainModel().copy(isInBookmarks = true)
+                        imagesRepository.addImageToBookmarks(image = imageAsDomainModel)
+                    } else {
+                        val imageAsDomainModel = image.mapToDomainModel()
+                        imagesRepository.addImageToBookmarksAndSyncStatusInCache(image = imageAsDomainModel)
                     }
                 }
             }
@@ -99,7 +86,7 @@ class ImageDetailsViewModel(
                 model.copy(isLoading = true)
             }
 
-            if (wasDetailsOpenedFromSearchScreen) {
+            if (isItImageFromSearchCategory) {
                 imagesRepository
                     .loadSearchedImageById(imageId = imageId.toString())
                     .onSuccess { imageDomainModel ->

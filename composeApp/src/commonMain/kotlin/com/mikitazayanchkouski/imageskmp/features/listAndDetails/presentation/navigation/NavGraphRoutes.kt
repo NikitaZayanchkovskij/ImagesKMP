@@ -13,7 +13,7 @@ sealed interface NavGraphRoutes {
     @Serializable
     data class DetailsScreen(
         val imageId: Long,
-        val isThisScreenOpenedFromSearchScreen: Boolean
+        val isItImageFromSearchCategory: Boolean
     ) : NavGraphRoutes
 
     @Serializable

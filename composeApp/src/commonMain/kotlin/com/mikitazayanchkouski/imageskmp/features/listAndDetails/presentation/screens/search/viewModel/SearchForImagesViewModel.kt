@@ -39,7 +39,10 @@ class SearchForImagesViewModel(
             is SearchScreenActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
-                        element = SearchScreenEvents.OnNavigateToImageDetails(imageId = action.imageId)
+                        element = SearchScreenEvents.OnNavigateToImageDetails(
+                            imageId = action.imageId,
+                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
+                        )
                     )
                 }
             }

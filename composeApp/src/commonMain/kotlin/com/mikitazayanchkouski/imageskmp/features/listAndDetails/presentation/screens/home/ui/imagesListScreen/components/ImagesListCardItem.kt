@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mikitazayanchkouski.imageskmp.core.presentation.theme.ImagesAppTheme
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import imageskmp.composeapp.generated.resources.Res
 import imageskmp.composeapp.generated.resources.icon_error_outlined
 import imageskmp.composeapp.generated.resources.icon_image_placeholder
@@ -39,10 +40,11 @@ import kotlin.random.nextInt
 fun ImagesListCardItem(
     modifier: Modifier = Modifier,
     imageId: Long,
+    isItImageFromSearchCategory: Boolean,
     imageUrlInPortrait: String,
     imageDescription: String,
     photographerName: String,
-    onImageClick: (Long) -> Unit
+    onImageClick: (Long, Boolean) -> Unit
 ) {
     val randomImageHeight by remember {
         mutableIntStateOf(value = Random.nextInt(range = 200..300))
@@ -54,7 +56,7 @@ fun ImagesListCardItem(
         modifier = modifier
             .background(color = colorScheme.background)
             .clickable {
-                onImageClick(imageId)
+                onImageClick(imageId, isItImageFromSearchCategory)
             },
         verticalArrangement = Arrangement.spacedBy(
             space = 4.dp,
@@ -119,10 +121,11 @@ private fun ImagesListCardItemPreview() {
         Surface {
             ImagesListCardItem(
                 imageId = 123,
+                isItImageFromSearchCategory = true,
                 imageUrlInPortrait = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
                 imageDescription = "Brown Rocks During Golden Hour",
                 photographerName = "Joey Farina",
-                onImageClick = { imageId -> }
+                onImageClick = { imageId, isItImageFromSearchCategory -> }
             )
         }
     }

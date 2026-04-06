@@ -19,7 +19,7 @@ val commonPresentationModule = module {
         ImageDetailsViewModel(
             imagesRepository = get<ImagesRepository>(),
             imageId = parameters.get(), // Automatically finds the Long
-            wasDetailsOpenedFromSearchScreen = parameters.get() // Automatically finds the Boolean
+            isItImageFromSearchCategory = parameters.get() // Automatically finds the Boolean
         )
     }
     viewModel<SearchForImagesViewModel> {

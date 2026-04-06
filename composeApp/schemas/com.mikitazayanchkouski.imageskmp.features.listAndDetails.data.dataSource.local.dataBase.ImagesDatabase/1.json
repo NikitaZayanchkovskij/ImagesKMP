@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a2af4e4d518843402a13d908053f0912",
+    "identityHash": "546c90d76a27f7733927a1f1c42bc413",
     "entities": [
       {
         "tableName": "ImageEntity",
@@ -144,7 +144,7 @@
       },
       {
         "tableName": "BookmarkedImageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imageUniqueKey` TEXT NOT NULL, `imageId` INTEGER NOT NULL, PRIMARY KEY(`imageUniqueKey`), FOREIGN KEY(`imageUniqueKey`) REFERENCES `ImageEntity`(`imageUniqueKey`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imageUniqueKey` TEXT NOT NULL, `imageId` INTEGER NOT NULL, `imageCategory` TEXT NOT NULL, `isInBookmarks` INTEGER NOT NULL, `width` INTEGER NOT NULL, `height` INTEGER NOT NULL, `imageUrl` TEXT NOT NULL, `photographerName` TEXT NOT NULL, `photographerUrl` TEXT NOT NULL, `photographerId` INTEGER NOT NULL, `avgColor` TEXT NOT NULL, `liked` INTEGER NOT NULL, `description` TEXT NOT NULL, `original` TEXT NOT NULL, `large2x` TEXT NOT NULL, `large` TEXT NOT NULL, `medium` TEXT NOT NULL, `small` TEXT NOT NULL, `portrait` TEXT NOT NULL, `landscape` TEXT NOT NULL, `tiny` TEXT NOT NULL, PRIMARY KEY(`imageUniqueKey`))",
         "fields": [
           {
             "fieldPath": "imageUniqueKey",
@@ -157,6 +157,120 @@
             "columnName": "imageId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "imageCategory",
+            "columnName": "imageCategory",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isInBookmarks",
+            "columnName": "isInBookmarks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "width",
+            "columnName": "width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "height",
+            "columnName": "height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photographerName",
+            "columnName": "photographerName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photographerUrl",
+            "columnName": "photographerUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photographerId",
+            "columnName": "photographerId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgColor",
+            "columnName": "avgColor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "liked",
+            "columnName": "liked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.original",
+            "columnName": "original",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.large2x",
+            "columnName": "large2x",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.large",
+            "columnName": "large",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.medium",
+            "columnName": "medium",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.small",
+            "columnName": "small",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.portrait",
+            "columnName": "portrait",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.landscape",
+            "columnName": "landscape",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResolutions.tiny",
+            "columnName": "tiny",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -164,25 +278,12 @@
           "columnNames": [
             "imageUniqueKey"
           ]
-        },
-        "foreignKeys": [
-          {
-            "table": "ImageEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "imageUniqueKey"
-            ],
-            "referencedColumns": [
-              "imageUniqueKey"
-            ]
-          }
-        ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2af4e4d518843402a13d908053f0912')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '546c90d76a27f7733927a1f1c42bc413')"
     ]
   }
 }

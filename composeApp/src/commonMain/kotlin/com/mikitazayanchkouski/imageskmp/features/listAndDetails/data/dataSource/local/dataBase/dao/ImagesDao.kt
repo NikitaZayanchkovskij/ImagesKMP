@@ -6,7 +6,6 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.BookmarkedImageEntity
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.ImageEntity
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities.JoinBookmarkWithImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -64,7 +63,7 @@ interface ImagesDao {
          * So, if any image, that was received from the server, was already in bookmarks -
          * then, it is present in this list, with isInBookmarks field == true.
          * And also, it is our up-to-date images list from the server.
-         * Now we can safely insert them to the database to cache.
+         * Now we can safely insert them to the database (to cache).
          */
         val newListToInsertToCache = serverImages.map { serverImage ->
             if (idsOfImagesThatAreInBookmarks.contains(element = serverImage.imageId)) {
@@ -81,8 +80,7 @@ interface ImagesDao {
          * To not clog up the database, and keep it in sync.
          */
         val oldLocalImagesInCacheIds = localImagesInCache.map { imageEntity -> imageEntity.imageId }
-        val upToDateServerImagesIds =
-            serverImages.map { imageEntity -> imageEntity.imageId }.toSet()
+        val upToDateServerImagesIds = serverImages.map { imageEntity -> imageEntity.imageId }.toSet()
 
         val outdatedImagesIds = oldLocalImagesInCacheIds.filter { oldImageId ->
             oldImageId !in upToDateServerImagesIds
@@ -114,20 +112,8 @@ interface ImagesDao {
         )
     }
 
-    @Transaction // Ensures all happen, or neither happens.
-    suspend fun addImageToCacheAndToBookmarks(image: ImageEntity) {
-        upsertImagesToCache(images = listOf(element = image))
-        upsertImageToBookmarks(
-            bookmark = BookmarkedImageEntity(
-                imageUniqueKey = "${image.imageId}${image.imageCategory}",
-                imageId = image.imageId
-            )
-        )
-        updateIsImageInBookmarksStatusInCache(
-            isInBookmarks = true,
-            imageId = image.imageId
-        )
-    }
+    @Upsert
+    suspend fun addImageToBookmarks(bookmark: BookmarkedImageEntity)
 
     @Transaction // Ensures both happen, or neither happens.
     suspend fun deleteImageFromBookmarksAndSyncCache(imageId: Long) {
@@ -146,9 +132,7 @@ interface ImagesDao {
 
     /* This is needed for those images, that are been displayed on the main tabs.
      * (Nature, Islands etc.)
-     * When the user clicks on the image to go to the DetailsScreen - I'm checking
-     * the isInBookmarks field, to show the appropriate icon on the UI,
-     * to add, or to delete the image from bookmarks.
+     * But not for the searched images, because I'm not caching them.
      */
     @Query("UPDATE imageentity SET isInBookmarks =:isInBookmarks WHERE imageId = :imageId")
     suspend fun updateIsImageInBookmarksStatusInCache(
@@ -156,27 +140,17 @@ interface ImagesDao {
         imageId: Long
     )
 
-    /* @Transaction is needed for @Relation queries.
-     * It also means, that this function will only make changes,
-     * if ALL queries succeed.
-     *
-     * GROUP BY handles uniqueness.
+    /* GROUP BY handles uniqueness.
      * Because theoretically, images with the same id, can be present in multiple
      * categories (for example image of a tropical beach in nature and islands category),
      * because of GROUP BY - it will return only one image.
      * (Either from Nature, or from Islands)
-     *
-     * Because we are using @Relation, when we call getBookmarkedImages(),
-     * Room automatically performs the necessary logic, to look up the ImageEntity,
-     * for every BookmarkedImageEntity found.
-     * And returns them as a list of JoinBookmarkWithImage objects.
      */
-    @Transaction
     @Query("SELECT * FROM bookmarkedimageentity GROUP BY imageId")
-    fun getBookmarkedImages(): Flow<List<JoinBookmarkWithImage>>
+    fun getBookmarkedImages(): Flow<List<BookmarkedImageEntity>>
 
     @Query("SELECT * FROM bookmarkedimageentity WHERE imageId = :imageId LIMIT 1")
-    fun getImageFromBookmarksById(imageId: Long): Flow<JoinBookmarkWithImage?>
+    fun getImageFromBookmarksById(imageId: Long): Flow<BookmarkedImageEntity?>
 
     @Query("DELETE FROM imageentity WHERE imageId IN (:ids)")
     suspend fun deleteImagesByIds(ids: List<Long>)

@@ -42,7 +42,8 @@ class BookmarksViewModel(
                 viewModelScope.launch {
                     eventChannel.send(
                         element = BookmarksScreenEvents.OnNavigateToImageDetails(
-                            imageId = action.imageId
+                            imageId = action.imageId,
+                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
                         )
                     )
                 }

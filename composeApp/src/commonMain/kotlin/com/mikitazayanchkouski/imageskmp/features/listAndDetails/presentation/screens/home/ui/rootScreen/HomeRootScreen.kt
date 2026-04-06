@@ -45,7 +45,11 @@ private fun HomeScreen(
     onNavigateToImageDetails: (Long, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
-    val pagerState = rememberPagerState { ImagesCategories.entries.size }
+    /* -1 is needed, because I don't want SEARCH category from the enum,
+     * to be present in this list.
+     */
+    val pagerState = rememberPagerState { ImagesCategories.entries.size - 1 }
+
     val currentTabIndex = pagerState.currentPage
     val scope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
@@ -63,8 +67,17 @@ private fun HomeScreen(
             containerColor = colorScheme.background,
             edgePadding = 10.dp,
         ) {
-            ImagesCategories.entries.forEachIndexed { index, category ->
-                if (category != ImagesCategories.SEARCH) {
+            run loop@{
+                ImagesCategories.entries.forEachIndexed { index, category ->
+
+                    /* This is needed here, because I also have a SEARCH
+                     * category inside the enum.
+                     * And I don't want SEARCH category to be displayed as a Tab,
+                     * and also don't want this category to be loaded from the
+                     * server for ImagesListRootScreen, and to be saved in cache.
+                     */
+                    if (category == ImagesCategories.SEARCH) return@loop
+
                     val isTabSelected = (index == currentTabIndex)
 
                     Tab(
@@ -89,7 +102,6 @@ private fun HomeScreen(
             beyondViewportPageCount = 3,
             state = pagerState
         ) { tabIndex ->
-            // индекс 7 это Search
             ImagesListRoot(
                 category = ImagesCategories.entries[tabIndex],
                 onNavigateToImageDetails = onNavigateToImageDetails,

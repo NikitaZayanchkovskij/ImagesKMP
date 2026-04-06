@@ -2,5 +2,9 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 sealed interface ImagesListActions {
     data object OnRefresh : ImagesListActions
-    data class OnNavigateToImageDetails(val imageId: Long) : ImagesListActions
+
+    data class OnNavigateToImageDetails(
+        val imageId: Long,
+        val isItImageFromSearchCategory: Boolean
+    ) : ImagesListActions
 }

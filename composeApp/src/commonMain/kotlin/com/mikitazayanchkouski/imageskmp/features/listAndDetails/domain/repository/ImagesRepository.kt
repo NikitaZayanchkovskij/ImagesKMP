@@ -29,18 +29,11 @@ interface ImagesRepository {
     /** This function is used, when we open ImageDetailsScreen not from the SearchScreen.
      * In this case, image, that is shown on the DetailsScreen, is present in cache.
      */
-    suspend fun addImageToBookmarksAndSyncStatusInCache(
-        imageId: Long,
-        imageCategory: ImagesCategories
-    )
+    suspend fun addImageToBookmarksAndSyncStatusInCache(image: ImageDomainModel)
 
-    /** There is an important comment, about this function (this logic),
-     * inside the ImageDetailsViewModel:
-     * [com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.viewModel.ImageDetailsViewModel]
-     */
-    suspend fun addImageToCacheAndToBookmarks(image: ImageDomainModel)
-
+    suspend fun addImageToBookmarks(image: ImageDomainModel)
     suspend fun deleteImageFromBookmarks(imageId: Long)
+    suspend fun deleteImageFromBookmarksAndSyncCache(imageId: Long)
     suspend fun loadSearchedImages(searchQuery: String): CustomResult<ImagesListDomainModel, DataError.Remote>
     suspend fun loadSearchedImageById(imageId: String): CustomResult<ImageDomainModel, DataError.Remote>
     fun getBookmarks(): Flow<List<ImageDomainModel>>

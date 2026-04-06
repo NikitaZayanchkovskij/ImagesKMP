@@ -105,7 +105,10 @@ class ImagesListViewModel(
             is ImagesListActions.OnNavigateToImageDetails -> {
                 viewModelScope.launch {
                     eventChannel.send(
-                        element = ImagesListEvents.OnNavigateToImageDetails(imageId = action.imageId)
+                        element = ImagesListEvents.OnNavigateToImageDetails(
+                            imageId = action.imageId,
+                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
+                        )
                     )
                 }
             }

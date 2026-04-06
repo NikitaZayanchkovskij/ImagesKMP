@@ -3,7 +3,12 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 import org.jetbrains.compose.resources.StringResource
 
 sealed interface SearchScreenEvents {
-    data class OnNavigateToImageDetails(val imageId: Long) : SearchScreenEvents
+
+    data class OnNavigateToImageDetails(
+        val imageId: Long,
+        val isItImageFromSearchCategory: Boolean
+    ) : SearchScreenEvents
+
     data class OnImageLoadingFailed(val message: StringResource) : SearchScreenEvents
     data class OnShowUserInfoMessage(val message: StringResource) : SearchScreenEvents
 }

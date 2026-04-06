@@ -52,16 +52,19 @@ import org.koin.core.parameter.parametersOf
 fun DetailsRoot(
     imageId: Long,
 
-    /* I need this check to identify, do I need to load the image from the cache
-     * (from the database) in the view model, or to load it remotely, from the server.
+    /* I need this check to identify:
+     * 1) Do I need to load the image from the cache (from the database)
+     * in the view model, or to load it remotely, from the server;
+     * 2) If details was opened from the bookmarks screen,
+     * but for the image, from the search category.
      * Because searched images are not been saved locally (not been cached).
      */
-    isThisScreenOpenedFromSearchScreen: Boolean,
+    isItImageFromSearchCategory: Boolean,
 
     viewModel: ImageDetailsViewModel = koinViewModel(
         key = imageId.toString(),
         parameters = {
-            parametersOf(imageId, isThisScreenOpenedFromSearchScreen)
+            parametersOf(imageId, isItImageFromSearchCategory)
         }
     ),
     onNavigateBackToListScreen: () -> Unit

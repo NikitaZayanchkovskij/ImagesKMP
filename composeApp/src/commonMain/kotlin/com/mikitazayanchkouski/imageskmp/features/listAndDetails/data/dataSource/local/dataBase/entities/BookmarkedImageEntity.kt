@@ -1,40 +1,50 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.local.dataBase.entities
 
+import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
-@Entity(
-    primaryKeys = ["imageUniqueKey"],
-    foreignKeys = [
-        ForeignKey(
-            entity = ImageEntity::class,
-
-            /* Why not to link imageId?
-             *
-             * Because in case of this app, imageId can actually be not unique,
-             * because theoretically it could be present in both categories:
-             * for example Nature and Islands.
-             * And SQLite requires parent columns in a foreign key relationship to be unique.
-             *
-             * P.S.
-             * But this will have a side effect, that the same image will be displayed
-             * twice in BookmarksScreen, if it belongs to both categories: Nature and Islands.
-             *
-             * In this case I could just make a check: if an image is present
-             * in both categories - then, I manually display only one of them.
-             * And when the user deletes the image from bookmarks - then, "under the hood",
-             * I'm actually deleting two bookmarks, with the same imageId.
-             */
-            parentColumns = ["imageUniqueKey"],
-            childColumns = ["imageUniqueKey"],
-            /* This ensures, that if the image is deleted - then,
-             * it's automatically removed from bookmarks too.
-             */
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+/* Why I have 2 identically looking Entities?
+ * ImageEntity and this BookmarkedImageEntity?
+ *
+ * In case of this application, and my offline first logic,
+ * with cache and remote images synchronization,
+ * and not caching searched images - in this specific case,
+ * it makes total sense,
+ * and it is actually better to create 2 separate entities.
+ *
+ * Because,
+ * When I had BookmarkedImageEntity (with just 2 fields: imageUniqueKey and imageId)
+ * as a parent of ImageEntity, and was using Join and ForeignKeys - it has led
+ * to many problems with cache and bookmarks synchronization.
+ * Because bookmark was a child of cached image.
+ *
+ * But, I want to be able to edit these 2 tables separately.
+ * But it's not possible, if one table is a child of another.
+ * For example: to add searched image to bookmarks, I was forced to first
+ * insert this image to cache, and only then to bookmarks.
+ * But I don't need searched images in cache, only in bookmarks.
+ *
+ * And so on and so forth.
+ * There also other cases, but I'm not mentioning them here,
+ * to not make this comment incredibly long.
+ */
+@Entity
 data class BookmarkedImageEntity(
+    @PrimaryKey
     val imageUniqueKey: String,
-    val imageId: Long
+    val imageId: Long,
+    val imageCategory: String,
+    val isInBookmarks: Boolean,
+    val width: Int,
+    val height: Int,
+    val imageUrl: String,
+    val photographerName: String,
+    val photographerUrl: String,
+    val photographerId: Long,
+    val avgColor: String,
+    @Embedded
+    val imageResolutions: ImageResolutionsEntity,
+    val liked: Boolean,
+    val description: String
 )

@@ -22,7 +22,8 @@
     <string name="error_remote_json_conversion">Ошибка преобразования JSON результата.</string>
 
     <string name="smiling_phone_icon_message">Вы ещё не загружали изображения...</string>
-    <string name="smiling_search_icon_message">Вы ещё не искали изображения..."</string>
+    <string name="smiling_search_icon_message">Вы ещё не искали изображения...</string>
+    <string name="smiling_bookmarks_icon_message">У вас ещё нет закладок...</string>
     <string name="content_description_smiling_phone_icon">Картинка с сообщением: "Вы ещё не загружали изображения..."</string>
     <string name="content_description_smiling_search_icon">Картинка с сообщением: "Вы ещё не искали изображения..."</string>
 

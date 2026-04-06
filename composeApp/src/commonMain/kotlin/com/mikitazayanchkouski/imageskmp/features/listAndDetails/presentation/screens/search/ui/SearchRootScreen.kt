@@ -67,14 +67,20 @@ fun SearchRoot(
             }
 
             is SearchScreenEvents.OnNavigateToImageDetails -> {
-                /* True here is needed to pass the information, that we are
-                 * opening the details screen from the search screen.
-                 * To properly decide in ImageDetailsViewModel, from where to load the image.
-                 * I'm not caching searched images, so if we
-                 * open details from the search screen - I need to load the image from the server,
-                 * and not from the local cache.
+                /* isItImageFromSearchCategory here is needed,
+                 * to pass the information, about are we opening the
+                 * details screen from the search screen, or not.
+                 * Or, are we opening details for the image from bookmarks,
+                 * that is from the search category.
+                 *
+                 * To properly decide in ImageDetailsViewModel,
+                 * from where to load the image.
+                 * Because I'm not caching searched images.
                  */
-                onNavigateToImageDetails(event.imageId, true)
+                onNavigateToImageDetails(
+                    event.imageId,
+                    event.isItImageFromSearchCategory
+                )
             }
 
             is SearchScreenEvents.OnShowUserInfoMessage -> {
@@ -175,12 +181,16 @@ private fun SearchScreen(
                     ) { imageUiModel ->
                         ImagesListCardItem(
                             imageId = imageUiModel.imageId,
+                            isItImageFromSearchCategory = imageUiModel.imageCategory == ImagesCategories.SEARCH,
                             imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
                             imageDescription = imageUiModel.description,
                             photographerName = imageUiModel.photographerName,
-                            onImageClick = { imageId ->
+                            onImageClick = { imageId, isItImageFromSearchCategory ->
                                 onUserAction(
-                                    SearchScreenActions.OnNavigateToImageDetails(imageId = imageId)
+                                    SearchScreenActions.OnNavigateToImageDetails(
+                                        imageId = imageId,
+                                        isItImageFromSearchCategory = isItImageFromSearchCategory
+                                    )
                                 )
                             }
                         )

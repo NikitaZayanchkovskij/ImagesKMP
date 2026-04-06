@@ -39,7 +39,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 import imageskmp.composeapp.generated.resources.Res
 import imageskmp.composeapp.generated.resources.content_description_smiling_phone_icon
 import imageskmp.composeapp.generated.resources.icon_smiling_phone
-import imageskmp.composeapp.generated.resources.smiling_phone_icon_message
+import imageskmp.composeapp.generated.resources.smiling_bookmarks_icon_message
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -65,14 +65,20 @@ fun BookmarksRoot(
             }
 
             is BookmarksScreenEvents.OnNavigateToImageDetails -> {
-                /* False here is needed to pass the information, that we are
-                 * opening the details screen NOT from the search screen.
-                 * To properly decide in ImageDetailsViewModel, from where to load the image.
-                 * I'm not caching searched images, so if we
-                 * open details from the search screen - I need to load the image from the server,
-                 * and not from the local cache.
+                /* isItImageFromSearchCategory here is needed,
+                 * to pass the information, about are we opening the
+                 * details screen from the search screen, or not.
+                 * Or, are we opening details for the image from bookmarks,
+                 * that is from the search category.
+                 *
+                 * To properly decide in ImageDetailsViewModel,
+                 * from where to load the image.
+                 * Because I'm not caching searched images.
                  */
-                onNavigateToImageDetails(event.imageId, false)
+                onNavigateToImageDetails(
+                    event.imageId,
+                    event.isItImageFromSearchCategory
+                )
             }
 
             is BookmarksScreenEvents.OnShowUserInfoMessage -> {
@@ -130,7 +136,7 @@ private fun BookmarksScreen(
                 )
                 Text(
                     text = stringResource(
-                        resource = Res.string.smiling_phone_icon_message
+                        resource = Res.string.smiling_bookmarks_icon_message
                     ),
                     color = colorScheme.onBackground,
                     style = typography.bodyMedium
@@ -156,12 +162,16 @@ private fun BookmarksScreen(
                 ) { imageUiModel ->
                     ImagesListCardItem(
                         imageId = imageUiModel.imageId,
+                        isItImageFromSearchCategory = imageUiModel.imageCategory == ImagesCategories.SEARCH,
                         imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
                         imageDescription = imageUiModel.description,
                         photographerName = imageUiModel.photographerName,
-                        onImageClick = { imageId ->
+                        onImageClick = { imageId, isItImageFromSearchCategory ->
                             onUserAction(
-                                BookmarksScreenActions.OnNavigateToImageDetails(imageId = imageId)
+                                BookmarksScreenActions.OnNavigateToImageDetails(
+                                    imageId = imageId,
+                                    isItImageFromSearchCategory = isItImageFromSearchCategory
+                                )
                             )
                         }
                     )
