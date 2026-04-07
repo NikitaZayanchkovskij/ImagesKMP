@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /** This function is needed to not lose any events,
- * that are arriving to our screen from the ViewModel.
+ * that are arriving to any screen from the corresponding ViewModel.
  *
- * Theoretically it could happen, that if an event (for example about an error,
+ * It could happen, that if an event (for example about an error,
  * or about some successful action etc.) arrives during the configuration change
  * (during screen rotation, or theme switching, or locale, etc.) - then,
  * without this utility function, an event will be lost.

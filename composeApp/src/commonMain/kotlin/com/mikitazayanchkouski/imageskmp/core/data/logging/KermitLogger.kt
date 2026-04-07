@@ -1,9 +1,9 @@
 package com.mikitazayanchkouski.imageskmp.core.data.logging
 
 import co.touchlab.kermit.Logger
-import com.mikitazayanchkouski.imageskmp.core.domain.logging.PexelsLogger
+import com.mikitazayanchkouski.imageskmp.core.domain.logging.ImagesAppLogger
 
-data object KermitLogger : PexelsLogger {
+data object KermitLogger : ImagesAppLogger {
 
     override fun debug(message: String) {
         Logger.d(messageString = message)

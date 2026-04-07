@@ -15,7 +15,9 @@ interface ImagesDao {
     /* Remote list of images on the server periodically updates.
      * For example: each day it is a new list of images.
      * So, we need to keep our cached images, up to date with server ones.
-     * Also, we must prevent those images, that were in bookmarks.
+     *
+     * Also, we must prevent those images, that were in bookmarks,
+     * from been removed from bookmarks, when cache updates.
      * Those images must not lose there isInBookmarks status in cache.
      * This function helps to do this.
      */
@@ -29,7 +31,7 @@ interface ImagesDao {
         /* The check bellow is needed to not lose isInBookmarks status of cached images,
          * and keep it in sync with images, from bookmarks entity.
          * (I have separate entities: one for images in cache,
-         * and one specifically dedicated to images bookmarks)
+         * and one specifically dedicated to images in bookmarks)
          * In this function I strictly need to set the right isInBookmarks status,
          * for images in cache.
          * Entity, dedicated for bookmarks, is untouched.
@@ -53,8 +55,7 @@ interface ImagesDao {
                       * If ids are just a list - the "contains" check will run a loop,
                       * and it will increase the amount of operations quadratically. ($O(N^2)$)
                       *
-                      * Set "says": "If the element exists - he is under this address in memory."
-                      * (Analogy is: map and a key value pair.)
+                      * Set "says": "If the element exists - it is under this address in memory."
                       * And because of that - no need to run a loop, for all elements in a collection.
                       */
 
@@ -98,6 +99,8 @@ interface ImagesDao {
     fun getImagesFromCacheByCategory(imageCategory: String): Flow<List<ImageEntity>>
 
     /* This might return multiple images, if the same ID is in two categories.
+     * (For example: an image of a tropical beach,
+     * is present both in Nature, and in Islands category.)
      * We only want one for the Details screen - that's why LIMIT is here.
      */
     @Query("SELECT * FROM imageentity WHERE imageId = :imageId LIMIT 1")
@@ -131,7 +134,7 @@ interface ImagesDao {
     suspend fun deleteImageFromBookmarks(imageId: Long)
 
     /* This is needed for those images, that are been displayed on the main tabs.
-     * (Nature, Islands etc.)
+     * (Nature, Islands etc., at the Home screen)
      * But not for the searched images, because I'm not caching them.
      */
     @Query("UPDATE imageentity SET isInBookmarks =:isInBookmarks WHERE imageId = :imageId")
@@ -142,9 +145,9 @@ interface ImagesDao {
 
     /* GROUP BY handles uniqueness.
      * Because theoretically, images with the same id, can be present in multiple
-     * categories (for example image of a tropical beach in nature and islands category),
+     * categories (for example: an image of a tropical beach,
+     * is present both in Nature, and in Islands category.),
      * because of GROUP BY - it will return only one image.
-     * (Either from Nature, or from Islands)
      */
     @Query("SELECT * FROM bookmarkedimageentity GROUP BY imageId")
     fun getBookmarkedImages(): Flow<List<BookmarkedImageEntity>>

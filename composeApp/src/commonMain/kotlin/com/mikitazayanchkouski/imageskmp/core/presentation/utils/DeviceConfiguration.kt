@@ -8,6 +8,7 @@ import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_MEDIUM_LO
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 
+// TODO: Later need to add different orientations support
 @Composable
 fun currentDeviceConfiguration(): DeviceConfiguration {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass

@@ -6,10 +6,9 @@ package com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling
  * For example: in case of an error - Result class from Kotlin only allows to
  * pass an exception (throwable), without a body.
  *
- * In this class we can pass a body if needed, as a generic of type Error.
+ * In this class we can modify this class a little bit,
+ * and pass an error body, if needed.
  * For example: { "error": "Your password has no special character" }
- * In this case, the generic error is for example this class:
- * PasswordErrorDto(val error: String)
  */
 sealed interface CustomResult<out Data, out Error : CustomError> {
     data class Success<out Data>(val data: Data) : CustomResult<Data, Nothing>

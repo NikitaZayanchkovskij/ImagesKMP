@@ -1,6 +1,6 @@
 package com.mikitazayanchkouski.imageskmp.core.data.network
 
-import com.mikitazayanchkouski.imageskmp.core.domain.logging.PexelsLogger
+import com.mikitazayanchkouski.imageskmp.core.domain.logging.ImagesAppLogger
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.data.dataSource.remote.ListAndDetailsFeatureNetworkConstants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
@@ -18,7 +18,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class HttpClientFactory(
-    private val pexelsLogger: PexelsLogger
+    private val imagesAppLogger: ImagesAppLogger
 ) {
 
     fun create(engine: HttpClientEngine): HttpClient {
@@ -38,7 +38,7 @@ class HttpClientFactory(
             install(plugin = Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        pexelsLogger.debug(message = message)
+                        imagesAppLogger.debug(message = message)
                     }
                 }
                 level = LogLevel.ALL
