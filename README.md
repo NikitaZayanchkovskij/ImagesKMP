@@ -12,6 +12,7 @@ P.S. Work is still in progress, this is not the final state of the app. I will a
 P.P.S. If you want to launch and test the app - you need an API key. 🔑
 
 ### Video demo: [watch on YouTube](https://youtu.be/I_tUvr1YWic?si=ka8YtYP3AW9XA9PJ) 👀
+### Screenshots are bellow: [App's screenshots](#apps-screenshots)
 
 ## Technologies, used in the project: 💻
 1) Kotlin Multiplatform for the shared business logic.
