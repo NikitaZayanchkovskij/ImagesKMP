@@ -24,11 +24,12 @@ P.P.S. If you want to launch and test the app - you need an API key. 🔑
 7) Ktor client for networking.
 8) Kotlin Serialization for converting Kotlin objects, to data formats, like JSON and vice-versa.
 9) Koin for dependency injection.
-10) Room for the database.
-11) Coil image loading library.
-12) Kermit for multiplatform logging.
-13) Light and dark theme support.
-14) English and Russian localization.
+10) Kotlin Coroutines and Flows.
+11) Room for the database.
+12) Coil image loading library.
+13) Kermit for multiplatform logging.
+14) Light and dark theme support.
+15) English and Russian localization.
 
 ## Project structure: 
 I don't use multi-modules here, because this is a relatively simple app, and it would be an overkill for this project.\
