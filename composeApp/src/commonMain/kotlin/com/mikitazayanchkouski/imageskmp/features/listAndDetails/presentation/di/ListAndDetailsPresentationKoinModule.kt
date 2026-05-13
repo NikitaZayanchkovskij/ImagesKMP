@@ -8,7 +8,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val commonPresentationModule = module {
+val listAndDetailsPresentationKoinModule = module {
     viewModel<ImagesListViewModel> { parameters ->
         ImagesListViewModel(
             imagesRepository = get<ImagesRepository>(),
