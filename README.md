@@ -1,5 +1,7 @@
 # Inspirational Images
 
+### This is my CV project, to demonstrate my skills and the quality of my work.
+
 ### App's description: 📱
 🌅 🏞️ Find inspirations, according to your mood, so you can relax, or create better. 😌
 
@@ -25,7 +27,7 @@ P.P.S. If you want to launch and test the app - you need an API key. 🔑
 8) Kotlin Serialization for converting Kotlin objects, to data formats, like JSON and vice-versa.
 9) Koin for Dependency Injection (DI).
 10) Kotlin Coroutines and Flows.
-11) Room for the database.
+11) Room for the database. (Offline first functionality)
 12) Coil image loading library.
 13) Kermit for multiplatform logging.
 14) Light and dark theme support.
