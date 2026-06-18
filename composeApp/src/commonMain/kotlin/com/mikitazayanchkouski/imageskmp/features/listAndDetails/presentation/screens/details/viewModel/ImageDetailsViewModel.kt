@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onFailure
 import com.mikitazayanchkouski.imageskmp.core.domain.customResultHandling.onSuccess
-import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringResource
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToDomainModel
@@ -21,7 +20,8 @@ import kotlinx.coroutines.launch
 class ImageDetailsViewModel(
     private val imagesRepository: ImagesRepository,
     private val imageId: Long,
-    private val isItImageFromSearchCategory: Boolean
+    private val areDetailsOpenedFromSearchScreen: Boolean,
+    private val areDetailsOpenedFromBookmarksScreen: Boolean
 ) : ViewModel() {
     private val eventChannel = Channel<ImageDetailsEvents>()
     val events = eventChannel.receiveAsFlow()
@@ -45,22 +45,19 @@ class ImageDetailsViewModel(
 
     fun onUserAction(action: ImageDetailsActions) {
         when (action) {
-            ImageDetailsActions.OnNavigateBack -> {
-                viewModelScope.launch {
-                    eventChannel.send(element = ImageDetailsEvents.OnNavigateBack)
-                }
-            }
-
             is ImageDetailsActions.OnSwitchIsInBookmarksState -> switchIsInBookmarksState()
         }
     }
 
     private fun switchIsInBookmarksState() {
         viewModelScope.launch {
+
             _state.value.image?.let { image ->
+
                 if (image.isInBookmarks) {
-                    /* If an image is from SEARCH category, then,
-                     * according to my logic, images from SEARCH are not present in cache.
+                    /* If an image is from SEARCH category, then, according to my application's logic,
+                     * images from SEARCH category are NOT present in CACHE.
+                     * In this case I just need to delete an image from Bookmarks table/database.
                      */
                     if (image.imageCategory == ImagesCategories.SEARCH) {
                         imagesRepository.deleteImageFromBookmarks(imageId = image.imageId)
@@ -68,7 +65,16 @@ class ImageDetailsViewModel(
                         imagesRepository.deleteImageFromBookmarksAndSyncCache(imageId = image.imageId)
                     }
                 } else {
-                    if (isItImageFromSearchCategory) {
+                    /* If an image is from the SEARCH category - then I need to only insert
+                     * it to bookmarks, without adding to cache/database.
+                     *
+                     * If it is NOT from the SEARCH - then, all other images categories are been saved
+                     * to cache/database.
+                     * In this case I need to add the image to bookmarks database table
+                     * PLUS synchronize cache table,
+                     * to properly display "isInBookmarks" status everywhere.
+                     */
+                    if (image.imageCategory == ImagesCategories.SEARCH) {
                         val imageAsDomainModel = image.mapToDomainModel().copy(isInBookmarks = true)
                         imagesRepository.addImageToBookmarks(image = imageAsDomainModel)
                     } else {
@@ -86,70 +92,25 @@ class ImageDetailsViewModel(
                 model.copy(isLoading = true)
             }
 
-            if (isItImageFromSearchCategory) {
+            /* If we open ImageDetailsScreen from the BookmarksScreen - then,
+             * it does not matter, from with category is this image.
+             * Because it will be present in the bookmarks database table anyway.
+             *
+             * P.S. My images in cache table and bookmarks table -
+             * that is two unconnected different tables.
+             */
+            if (areDetailsOpenedFromBookmarksScreen) {
                 imagesRepository
-                    .loadSearchedImageById(imageId = imageId.toString())
-                    .onSuccess { imageDomainModel ->
-                        val imageUiModel = imageDomainModel.mapToUiModel()
-
-                        _state.update { model ->
-                            model.copy(
-                                isLoading = false,
-                                isImageLoadedSuccessfully = true,
-                                image = imageUiModel
-                            )
-                        }
-
-                        /* Needed to properly update the UI button to
-                         * add/remove image to/from bookmarks.
-                         */
-                        imagesRepository
-                            .getImageFromBookmarksById(imageId = imageUiModel.imageId)
-                            .collect { imageDomainModel ->
-                                if (imageDomainModel != null) {
-                                    _state.update { model ->
-                                        model.copy(
-                                            image = model.image?.copy(isInBookmarks = true)
-                                        )
-                                    }
-                                } else {
-                                    _state.update { model ->
-                                        model.copy(
-                                            image = model.image?.copy(isInBookmarks = false)
-                                        )
-                                    }
-                                }
-                            }
-                    }
-                    .onFailure { remoteError ->
-                        _state.update { model ->
-                            model.copy(
-                                isLoading = false,
-                                isImageLoadedSuccessfully = false,
-                                image = null
-                            )
-                        }
-                        eventChannel.send(
-                            element = ImageDetailsEvents.OnImageLoadingFailed(
-                                message = remoteError.mapToStringResource()
-                            )
-                        )
-                    }
-            } else {
-                /* Needed to properly update the UI button to
-                 * add/remove image to/from bookmarks.
-                 */
-                imagesRepository
-                    .getImageFromCacheById(imageId = imageId)
+                    .getImageFromBookmarksById(imageId = imageId)
                     .collect { imageDomainModel ->
-                        if (imageDomainModel != null) {
-                            val imageUiModel = imageDomainModel.mapToUiModel()
+                        val imageUiModel = imageDomainModel?.mapToUiModel()
 
+                        if (imageUiModel != null) {
                             _state.update { model ->
                                 model.copy(
                                     isLoading = false,
                                     isImageLoadedSuccessfully = true,
-                                    image = imageUiModel
+                                    image = imageUiModel.copy(isInBookmarks = true)
                                 )
                             }
                         } else {
@@ -162,6 +123,74 @@ class ImageDetailsViewModel(
                             }
                         }
                     }
+
+                /* Now, if DetailsScreen is opened not from the BookmarksScreen:
+                 *
+                 * 1) According to my Offline First logic, if it is not the SearchScreen - then,
+                 * it is not possible, that the clicked image is not present in the cache/database.
+                 * Because, after I have received images from the server - I am inserting them
+                 * to the cache/database, and displaying on the screen only from the database.
+                 * To not violate the Single Source of Truth principle.
+                 *
+                 * 2) So here I also need the check, if we have opened the ImageDetailsScreen
+                 * from any other screen, that is not the search screen.
+                 * And also need the check, if we have opened the ImageDetailsScreen
+                 * from the SearchScreen.
+                 */
+            } else {
+                /* If we open details from the SearchScreen - I'm loading the image
+                 * from the Internet. Because I'm not caching searched images.
+                 */
+                if (areDetailsOpenedFromSearchScreen) {
+                    imagesRepository
+                        .loadSearchedImageById(imageId = imageId.toString())
+                        .onSuccess { imageDomainModel ->
+                            val imageUiModel = imageDomainModel.mapToUiModel()
+
+                            _state.update { model ->
+                                model.copy(
+                                    isLoading = false,
+                                    isImageLoadedSuccessfully = true,
+                                    image = imageUiModel
+                                )
+                            }
+                        }
+                        .onFailure { remoteDataError ->
+                            _state.update { model ->
+                                model.copy(
+                                    isLoading = false,
+                                    isImageLoadedSuccessfully = false
+                                )
+                            }
+                        }
+                    /* If details were opened from any other tab/screen, from Nature for example - then,
+                     * I'm loading the image from the database.
+                     */
+                } else {
+                    imagesRepository
+                        .getImageFromCacheById(imageId = imageId)
+                        .collect { imageDomainModel ->
+                            val imageUiModel = imageDomainModel?.mapToUiModel()
+
+                            if (imageUiModel != null) {
+                                _state.update { model ->
+                                    model.copy(
+                                        isLoading = false,
+                                        isImageLoadedSuccessfully = true,
+                                        image = imageUiModel
+                                    )
+                                }
+                            } else {
+                                _state.update { model ->
+                                    model.copy(
+                                        isLoading = false,
+                                        isImageLoadedSuccessfully = false,
+                                        image = null
+                                    )
+                                }
+                            }
+                        }
+                }
             }
         }
     }

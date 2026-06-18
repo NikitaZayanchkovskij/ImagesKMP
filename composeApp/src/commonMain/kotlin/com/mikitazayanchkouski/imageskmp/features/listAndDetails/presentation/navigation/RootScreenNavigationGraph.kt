@@ -16,6 +16,7 @@ fun RootScreenNavigationGraph(
     val navHostController = rememberNavController()
 
     NavHost(
+        modifier = modifier,
         navController = navHostController,
         startDestination = NavGraphRoutes.RootScreen
     ) {
@@ -26,13 +27,17 @@ fun RootScreenNavigationGraph(
             val imageId = backStackEntry
                 .toRoute<NavGraphRoutes.DetailsScreen>()
                 .imageId
-            val isItImageFromSearchCategory = backStackEntry
+            val areDetailsOpenedFromSearchScreen = backStackEntry
                 .toRoute<NavGraphRoutes.DetailsScreen>()
-                .isItImageFromSearchCategory
+                .areDetailsOpenedFromSearchScreen
+            val areDetailsOpenedFromBookmarksScreen = backStackEntry
+                .toRoute<NavGraphRoutes.DetailsScreen>()
+                .areDetailsOpenedFromBookmarksScreen
 
             DetailsRoot(
                 imageId = imageId,
-                isItImageFromSearchCategory = isItImageFromSearchCategory,
+                areDetailsOpenedFromSearchScreen = areDetailsOpenedFromSearchScreen,
+                areDetailsOpenedFromBookmarksScreen = areDetailsOpenedFromBookmarksScreen,
                 onNavigateBackToListScreen = {
                     navHostController.popBackStack()
                 }

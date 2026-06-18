@@ -90,11 +90,12 @@ fun EntryRootScreen(
         BottomNavigationBarGraph(
             paddingValues = paddingValues,
             navController = bottomBarNavHostController,
-            onNavigateToImageDetails = { imageId, isItImageFromSearchCategory ->
+            onNavigateToImageDetails = { imageId, areDetailsOpenedFromSearchScreen, areDetailsOpenedFromBookmarksScreen ->
                 rootScreenNavHostController.navigate(
                     route = NavGraphRoutes.DetailsScreen(
                         imageId = imageId,
-                        isItImageFromSearchCategory = isItImageFromSearchCategory
+                        areDetailsOpenedFromSearchScreen = areDetailsOpenedFromSearchScreen,
+                        areDetailsOpenedFromBookmarksScreen = areDetailsOpenedFromBookmarksScreen
                     )
                 ) {
                     launchSingleTop = true

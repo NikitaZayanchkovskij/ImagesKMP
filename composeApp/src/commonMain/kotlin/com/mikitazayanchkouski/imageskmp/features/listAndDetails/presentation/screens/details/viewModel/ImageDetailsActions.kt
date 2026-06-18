@@ -2,5 +2,4 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 
 sealed interface ImageDetailsActions {
     data class OnSwitchIsInBookmarksState(val imageId: Long) : ImageDetailsActions
-    data object OnNavigateBack : ImageDetailsActions
 }

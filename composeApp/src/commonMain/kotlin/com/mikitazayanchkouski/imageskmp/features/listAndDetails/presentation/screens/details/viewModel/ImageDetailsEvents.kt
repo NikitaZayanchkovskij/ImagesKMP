@@ -3,6 +3,5 @@ package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.s
 import org.jetbrains.compose.resources.StringResource
 
 sealed interface ImageDetailsEvents {
-    data object OnNavigateBack : ImageDetailsEvents
     data class OnImageLoadingFailed(val message: StringResource) : ImageDetailsEvents
 }

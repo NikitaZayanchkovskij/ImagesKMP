@@ -31,7 +31,6 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.utils.ObserveAsOneTim
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageResolutionsUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.viewModel.BookmarksScreenActions
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.viewModel.BookmarksScreenEvents
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.viewModel.BookmarksScreenState
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.bookmarks.viewModel.BookmarksViewModel
@@ -49,7 +48,16 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun BookmarksRoot(
     paddingValuesFromEntryRootScaffold: PaddingValues,
-    onNavigateToImageDetails: (Long, Boolean) -> Unit,
+
+    /* I'm passing 3 parameters here to pass the information about:
+     * 1) Image ID.
+     * 2) Are we opening the details screen from the search screen?
+     * 3) Are we opening details screen for the bookmarks screen?
+     * To properly decide in ImageDetailsViewModel, from where to load the image.
+     * Because I'm not caching searched images.
+     */
+    onNavigateToImageDetails: (Long, Boolean, Boolean) -> Unit,
+
     viewModel: BookmarksViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -64,23 +72,6 @@ fun BookmarksRoot(
                 }
             }
 
-            is BookmarksScreenEvents.OnNavigateToImageDetails -> {
-                /* isItImageFromSearchCategory here is needed,
-                 * to pass the information, about are we opening the
-                 * details screen from the search screen, or not.
-                 * Or, are we opening details for the image from bookmarks,
-                 * that is from the search category.
-                 *
-                 * To properly decide in ImageDetailsViewModel,
-                 * from where to load the image.
-                 * Because I'm not caching searched images.
-                 */
-                onNavigateToImageDetails(
-                    event.imageId,
-                    event.isItImageFromSearchCategory
-                )
-            }
-
             is BookmarksScreenEvents.OnShowUserInfoMessage -> {
                 scope.launch {
                     val infoMessageAsString = getString(resource = event.message)
@@ -93,7 +84,7 @@ fun BookmarksRoot(
     BookmarksScreen(
         paddingValues = paddingValuesFromEntryRootScaffold,
         state = state,
-        onUserAction = viewModel::onUserAction
+        onNavigateToImageDetails = onNavigateToImageDetails
     )
 }
 
@@ -101,7 +92,7 @@ fun BookmarksRoot(
 private fun BookmarksScreen(
     paddingValues: PaddingValues,
     state: BookmarksScreenState,
-    onUserAction: (BookmarksScreenActions) -> Unit
+    onNavigateToImageDetails: (Long, Boolean, Boolean) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -162,16 +153,14 @@ private fun BookmarksScreen(
                 ) { imageUiModel ->
                     ImagesListCardItem(
                         imageId = imageUiModel.imageId,
-                        isItImageFromSearchCategory = imageUiModel.imageCategory == ImagesCategories.SEARCH,
                         imageUrlInPortrait = imageUiModel.imageResolutions.portrait,
                         imageDescription = imageUiModel.description,
                         photographerName = imageUiModel.photographerName,
-                        onImageClick = { imageId, isItImageFromSearchCategory ->
-                            onUserAction(
-                                BookmarksScreenActions.OnNavigateToImageDetails(
-                                    imageId = imageId,
-                                    isItImageFromSearchCategory = isItImageFromSearchCategory
-                                )
+                        onImageClick = { imageId ->
+                            onNavigateToImageDetails(
+                                imageId,
+                                false, // areDetailsOpenedFromSearchScreen
+                                true // areDetailsOpenedFromBookmarksScreen
                             )
                         }
                     )
@@ -231,7 +220,7 @@ private fun BookmarksScreenPreview() {
                         )
                     }
                 ),
-                onUserAction = { action -> }
+                onNavigateToImageDetails = { _, _, _ -> }
             )
         }
     }

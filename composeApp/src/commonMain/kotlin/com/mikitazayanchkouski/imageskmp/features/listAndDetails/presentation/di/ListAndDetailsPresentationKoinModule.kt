@@ -18,8 +18,9 @@ val listAndDetailsPresentationKoinModule = module {
     viewModel<ImageDetailsViewModel> { parameters ->
         ImageDetailsViewModel(
             imagesRepository = get<ImagesRepository>(),
-            imageId = parameters.get(), // Automatically finds the Long
-            isItImageFromSearchCategory = parameters.get() // Automatically finds the Boolean
+            imageId = parameters.get(),
+            areDetailsOpenedFromSearchScreen = parameters.get(),
+            areDetailsOpenedFromBookmarksScreen = parameters.get()
         )
     }
     viewModel<SearchForImagesViewModel> {

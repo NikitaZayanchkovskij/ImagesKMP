@@ -8,7 +8,6 @@ import com.mikitazayanchkouski.imageskmp.core.presentation.mappers.mapToStringRe
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesCategories
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.repository.ImagesRepository
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers.mapToUiModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.home.viewModel.ImagesListActions
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,24 +47,37 @@ class ImagesListViewModel(
     private val _state = MutableStateFlow(value = ImagesListState())
 
     /* The sequence of events is the following:
+
      * 1) Collector joins: The UI starts collecting the state.
+
      * 2) Room triggers immediately:
-     * Because getCuratedImagesFromTheDatabase() returns a Flow from Room,
-     * Room immediately emits whatever is currently in the database (even if it's from yesterday).
+     * Because getImagesFromTheDatabase() returns a Flow from Room,
+     * Room immediately emits whatever is currently in the database (even if it's from yesterday or earlier).
+     *
      * 3) onStart runs: loadImages() is called.
+     * Inside loadImages() this call is present: imagesRepository.loadImagesFromTheServer(category = category)
+     * Inside loadImagesFromTheServer() images firstly been received from the network,
+     * and then up-to-date images from the server are been inserted to the database.
+     * And becuse of the database emits flow - up-to-date images are been emitted
+     * in the combine block bellow.
+     * Now this combine block emits fresh up-to-date data,
+     * without breaking the Single Source of Truth principle.
+     *
      * 4) If network fails:
      * fetchCuratedImagesFromTheServer() returns a Failure, because there is no internet.
      * If not - returns a Success.
+     *
      * 5) UI state updates:
      * I'm updating _state parameters: isLoading and isDataReceivedSuccessfully.
-     * 6) Combine triggers again:
-     * because _state changed, the combine block runs again.
-     * It takes the Failure or Success UI state, and merges it with
+     *
+     * 6) Because of this state update in paragraph 5 - combine block triggers again:
+     * it takes the Failure or Success UI state, and merges it with
      * the existing data, that was already in the database.
+     *
      * Result:
      * The user sees either the old cached images, from the previous successful
-     * network call, if current call fails
-     * (even though a snack bar from the eventChannel might pop up saying "No Internet"),
+     * network call, if current call fails (even though a snack bar
+     * from the eventChannel might pop up saying "No Internet"),
      * or the up-to-date new ones, that are just been fetched.
      */
     val state = combine(
@@ -102,16 +114,6 @@ class ImagesListViewModel(
 
     fun onUserAction(action: ImagesListActions) {
         when (action) {
-            is ImagesListActions.OnNavigateToImageDetails -> {
-                viewModelScope.launch {
-                    eventChannel.send(
-                        element = ImagesListEvents.OnNavigateToImageDetails(
-                            imageId = action.imageId,
-                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
-                        )
-                    )
-                }
-            }
             ImagesListActions.OnRefresh -> loadImages()
         }
     }

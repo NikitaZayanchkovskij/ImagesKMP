@@ -52,19 +52,24 @@ import org.koin.core.parameter.parametersOf
 fun DetailsRoot(
     imageId: Long,
 
-    /* I need this check to identify:
+    /* I need this checks to identify:
      * 1) Do I need to load the image from the cache (from the database)
-     * in the view model, or to load it remotely, from the server;
-     * 2) If details was opened from the bookmarks screen,
-     * but for the image, from the search category.
+     * in the view model, or to load it remotely, from the server.
+     * 2) If details were opened from the bookmarks screen, but for the image,
+     * from the search category.
      * Because searched images are not been saved locally (not been cached).
      */
-    isItImageFromSearchCategory: Boolean,
+    areDetailsOpenedFromSearchScreen: Boolean,
+    areDetailsOpenedFromBookmarksScreen: Boolean,
 
     viewModel: ImageDetailsViewModel = koinViewModel(
         key = imageId.toString(),
         parameters = {
-            parametersOf(imageId, isItImageFromSearchCategory)
+            parametersOf(
+                imageId,
+                areDetailsOpenedFromSearchScreen,
+                areDetailsOpenedFromBookmarksScreen
+            )
         }
     ),
     onNavigateBackToListScreen: () -> Unit
@@ -80,20 +85,21 @@ fun DetailsRoot(
                     println("ERROR: $errorMessage")
                 }
             }
-            ImageDetailsEvents.OnNavigateBack -> onNavigateBackToListScreen()
         }
     }
 
     DetailsScreen(
         imageState = imageState,
-        userAction = viewModel::onUserAction
+        userAction = viewModel::onUserAction,
+        onNavigateBack = onNavigateBackToListScreen
     )
 }
 
 @Composable
 private fun DetailsScreen(
     imageState: ImageDetailsState,
-    userAction: (ImageDetailsActions) -> Unit
+    userAction: (ImageDetailsActions) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -150,9 +156,7 @@ private fun DetailsScreen(
                 ImageHeaderCard(
                     imageUrlOriginal = imageState.image.imageResolutions.original,
                     imageDescription = imageState.image.description,
-                    onNavigateBackToListScreen = {
-                        userAction(ImageDetailsActions.OnNavigateBack)
-                    }
+                    onNavigateBackToListScreen = onNavigateBack
                 )
                 ImageDetailsInfo(
                     modifier = Modifier.fillMaxSize(),
@@ -221,7 +225,8 @@ private fun DetailsScreenPreview() {
                         description = "Brown Rocks During Golden Hour"
                     )
                 ),
-                userAction = { action -> }
+                userAction = { action -> },
+                onNavigateBack = {}
             )
         }
     }

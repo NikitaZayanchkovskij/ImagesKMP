@@ -13,7 +13,7 @@ import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.sc
 fun BottomNavigationBarGraph(
     paddingValues: PaddingValues,
     navController: NavHostController,
-    onNavigateToImageDetails: (Long, Boolean) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     NavHost(

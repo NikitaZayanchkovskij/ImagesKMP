@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeRoot(
     paddingValuesFromEntryRootScaffold: PaddingValues,
-    onNavigateToImageDetails: (Long, Boolean) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     HomeScreen(
@@ -42,11 +42,11 @@ fun HomeRoot(
 @Composable
 private fun HomeScreen(
     paddingValues: PaddingValues,
-    onNavigateToImageDetails: (Long, Boolean) -> Unit,
+    onNavigateToImageDetails: (Long, Boolean, Boolean) -> Unit,
     onShowSnackBarMessage: (String) -> Unit
 ) {
     /* -1 is needed, because I don't want SEARCH category from the enum,
-     * to be present in this list.
+     * to be present in this list in tab row's tabs.
      */
     val pagerState = rememberPagerState { ImagesCategories.entries.size - 1 }
 
@@ -134,7 +134,7 @@ private fun HomeScreenPreview() {
         Surface {
             HomeScreen(
                 paddingValues = PaddingValues(all = 0.dp),
-                onNavigateToImageDetails = { imageId, openedFromSearchScreen -> },
+                onNavigateToImageDetails = { _, _, _ -> },
                 onShowSnackBarMessage = { message -> }
             )
         }

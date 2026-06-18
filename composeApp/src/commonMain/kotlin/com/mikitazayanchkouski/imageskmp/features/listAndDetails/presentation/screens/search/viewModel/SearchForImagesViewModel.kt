@@ -36,17 +36,6 @@ class SearchForImagesViewModel(
 
     fun onUserAction(action: SearchScreenActions) {
         when (action) {
-            is SearchScreenActions.OnNavigateToImageDetails -> {
-                viewModelScope.launch {
-                    eventChannel.send(
-                        element = SearchScreenEvents.OnNavigateToImageDetails(
-                            imageId = action.imageId,
-                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
-                        )
-                    )
-                }
-            }
-
             SearchScreenActions.OnSearchClicked -> {
                 if (_state.value.searchQueryState.text.isBlank()) {
                     viewModelScope.launch {

@@ -31,8 +31,7 @@ class OfflineFirstImagesRepository(
         return remoteDataSource
             .loadImages(category = category)
             .onSuccess { imagesListDomainModel ->
-                val imagesToInsertInTheDatabase =
-                    imagesListDomainModel.listOfImages.map { domainModel ->
+                val imagesToInsertInTheDatabase = imagesListDomainModel.listOfImages.map { domainModel ->
                         domainModel.mapToCacheEntity()
                     }
 

@@ -36,21 +36,6 @@ class BookmarksViewModel(
             initialValue = BookmarksScreenState()
         )
 
-    fun onUserAction(action: BookmarksScreenActions) {
-        when (action) {
-            is BookmarksScreenActions.OnNavigateToImageDetails -> {
-                viewModelScope.launch {
-                    eventChannel.send(
-                        element = BookmarksScreenEvents.OnNavigateToImageDetails(
-                            imageId = action.imageId,
-                            isItImageFromSearchCategory = action.isItImageFromSearchCategory
-                        )
-                    )
-                }
-            }
-        }
-    }
-
     private fun loadBookmarks() {
         viewModelScope.launch {
             _state.update { model ->
