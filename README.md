@@ -1,5 +1,7 @@
 # Inspirational Images
 
+### This is my CV project, to demonstrate my skills and the quality of my work.
+
 ### App's description: 📱
 🌅 🏞️ Find inspirations, according to your mood, so you can relax, or create better. 😌
 
