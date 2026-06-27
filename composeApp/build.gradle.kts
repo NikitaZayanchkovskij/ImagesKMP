@@ -18,6 +18,11 @@ kotlin {
          * to be able to make our debug build run, on an Ios simulator.
          */
         experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+
+        /* Enables JVM host unit tests for the Android target, so shared
+         * commonTest sources (e.g. ViewModel tests) can run fast on the JVM.
+         */
+        withHostTest {}
     }
     
     listOf(
@@ -67,6 +72,9 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.turbine)
+            implementation(libs.assertk)
+            implementation(libs.kotlinx.coroutines.test)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
