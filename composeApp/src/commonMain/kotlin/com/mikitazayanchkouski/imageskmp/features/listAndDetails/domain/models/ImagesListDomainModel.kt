@@ -18,7 +18,7 @@ data class ImageDomainModel(
     val height: Int,
     val imageUrl: String,
     val photographerName: String,
-    val photographerUrl: String,
+    val photographerWebPageUrl: String,
     val photographerId: Long,
     val avgColor: String,
     val imageResolutions: ImageResolutionsDomainModel,

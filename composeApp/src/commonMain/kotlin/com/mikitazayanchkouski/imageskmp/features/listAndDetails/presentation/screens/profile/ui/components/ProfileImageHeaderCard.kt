@@ -1,4 +1,4 @@
-package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components
+package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.profile.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,12 +28,13 @@ import imageskmp.composeapp.generated.resources.content_description_icon_share
 import imageskmp.composeapp.generated.resources.icon_arrow_back
 import imageskmp.composeapp.generated.resources.icon_error_outlined
 import imageskmp.composeapp.generated.resources.icon_image_placeholder
+import imageskmp.composeapp.generated.resources.icon_person
 import imageskmp.composeapp.generated.resources.icon_share
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ImageHeaderCard(
+fun ProfileImageHeaderCard(
     modifier: Modifier = Modifier,
     imageUrlOriginal: String,
     imageDescription: String,
@@ -54,8 +55,8 @@ fun ImageHeaderCard(
             contentDescription = imageDescription,
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(resource = Res.drawable.icon_image_placeholder),
-            error = painterResource(resource = Res.drawable.icon_error_outlined)
+            placeholder = painterResource(resource = Res.drawable.icon_person),
+            error = painterResource(resource = Res.drawable.icon_person)
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -116,7 +117,7 @@ fun ImageHeaderCard(
 private fun ImageHeaderCardPreview() {
     ImagesAppTheme {
         Surface {
-            ImageHeaderCard(
+            ProfileImageHeaderCard(
                 imageUrlOriginal = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg",
                 imageDescription = "Brown Rocks During Golden Hour",
                 onNavigateBack = {}

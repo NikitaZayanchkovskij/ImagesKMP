@@ -1,11 +1,11 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.mappers
 
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImageResolutionsDomainModel
-import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.domain.models.ImagesListDomainModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageResolutionsUiModel
 import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImageUiModel
+import com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.models.ImagesListUiModel
 
 fun ImagesListDomainModel.mapToUiModel(): ImagesListUiModel {
     return ImagesListUiModel(
@@ -30,7 +30,7 @@ fun ImageDomainModel.mapToUiModel(): ImageUiModel {
         height = height,
         imageUrl = imageUrl,
         photographerName = photographerName,
-        photographerUrl = photographerUrl,
+        photographerUrl = photographerWebPageUrl,
         photographerId = photographerId,
         avgColor = avgColor,
         imageResolutions = imageResolutions.mapToUiModel(),

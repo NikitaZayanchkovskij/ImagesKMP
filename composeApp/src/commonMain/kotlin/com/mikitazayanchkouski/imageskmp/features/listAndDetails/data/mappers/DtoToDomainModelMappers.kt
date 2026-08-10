@@ -31,7 +31,7 @@ fun ImageDto.mapToDomainModel(category: ImagesCategories): ImageDomainModel {
         height = height,
         imageUrl = url,
         photographerName = photographerName,
-        photographerUrl = photographerUrl,
+        photographerWebPageUrl = photographerUrl,
         photographerId = photographerId,
         avgColor = avgColor,
         imageResolutions = imageResolutions.mapToDomainModel(),

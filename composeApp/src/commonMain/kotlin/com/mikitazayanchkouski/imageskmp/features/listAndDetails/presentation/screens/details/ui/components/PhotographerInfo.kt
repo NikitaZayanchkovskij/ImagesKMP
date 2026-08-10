@@ -34,7 +34,8 @@ import org.jetbrains.compose.resources.stringResource
 fun PhotographerInfo(
     modifier: Modifier = Modifier,
     photographerName: String,
-    photographerUrl: String
+    photographerUrl: String,
+    onShowProfileClick: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -80,7 +81,7 @@ fun PhotographerInfo(
             )
         }
         Button(
-            onClick = { println("Show profile details") },
+            onClick = onShowProfileClick,
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorScheme.surface
@@ -115,7 +116,8 @@ private fun PhotographerInfoPreview() {
         Surface {
             PhotographerInfo(
                 photographerName = "Joey Farina",
-                photographerUrl = "https://www.pexels.com/@joey"
+                photographerUrl = "https://www.pexels.com/@joey",
+                onShowProfileClick = {}
             )
         }
     }

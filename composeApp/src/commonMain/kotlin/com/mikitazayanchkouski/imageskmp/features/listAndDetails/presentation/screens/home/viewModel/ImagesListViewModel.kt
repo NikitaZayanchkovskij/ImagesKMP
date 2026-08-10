@@ -47,9 +47,9 @@ class ImagesListViewModel(
     private val _state = MutableStateFlow(value = ImagesListState())
 
     /* The sequence of events is the following:
-
+     *
      * 1) Collector joins: The UI starts collecting the state.
-
+     *
      * 2) Room triggers immediately:
      * Because getImagesFromTheDatabase() returns a Flow from Room,
      * Room immediately emits whatever is currently in the database (even if it's from yesterday or earlier).

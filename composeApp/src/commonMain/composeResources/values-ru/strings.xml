@@ -71,5 +71,10 @@
     <string name="search_bar_hint">Найдите изображения</string>
     <string name="response_for_image_search_is_empty">Похоже нет изображений, соответствующих вашему запросу. Пожалуйста, попробуйте найти что-нибудь другое.</string>
 
+    <!-- Профиль -->
+    <string name="content_description_profile_image">Изображение профиля</string>
+    <string name="profile_id_title">Id:</string>
+    <string name="profile_page_url_title">Адрес страницы:</string>
+    <string name="profile_image_url_title">Адрес изображения профиля:</string>
 
 </resources>

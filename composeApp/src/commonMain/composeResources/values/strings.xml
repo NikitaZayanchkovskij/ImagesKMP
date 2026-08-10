@@ -71,4 +71,10 @@
     <string name="search_bar_hint">Search for images</string>
     <string name="response_for_image_search_is_empty">Sorry, it seems like there are no such images, according to your request. Please, try something else.</string>
 
+    <!-- Profile -->
+    <string name="content_description_profile_image">Profile image</string>
+    <string name="profile_id_title">Id:</string>
+    <string name="profile_page_url_title">Webpage url:</string>
+    <string name="profile_image_url_title">Image url:</string>
+
 </resources>

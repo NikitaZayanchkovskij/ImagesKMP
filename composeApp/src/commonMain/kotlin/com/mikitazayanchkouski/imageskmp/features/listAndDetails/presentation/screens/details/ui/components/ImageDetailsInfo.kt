@@ -1,6 +1,7 @@
 package com.mikitazayanchkouski.imageskmp.features.listAndDetails.presentation.screens.details.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,8 @@ fun ImageDetailsInfo(
     photographerUrl: String,
     imageDescription: String,
     isInBookmarksState: Boolean,
-    switchIsInBookmarksState: () -> Unit
+    switchIsInBookmarksState: () -> Unit,
+    onShowProfileClick: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -73,8 +75,12 @@ fun ImageDetailsInfo(
             textAlign = TextAlign.Center
         )
         PhotographerInfo(
+            modifier = Modifier.clickable {
+                onShowProfileClick()
+            },
             photographerName = photographerName,
-            photographerUrl = photographerUrl
+            photographerUrl = photographerUrl,
+            onShowProfileClick = onShowProfileClick
         )
         Text(
             text = "${stringResource(resource = Res.string.image_description_title)}:",
@@ -158,7 +164,8 @@ private fun ImageDetailsInfoPreview() {
                 imageDescription = "Some loooong image description here..." +
                         "Or maybe not very long... :)",
                 isInBookmarksState = true,
-                switchIsInBookmarksState = {}
+                switchIsInBookmarksState = {},
+                onShowProfileClick = {}
             )
         }
     }

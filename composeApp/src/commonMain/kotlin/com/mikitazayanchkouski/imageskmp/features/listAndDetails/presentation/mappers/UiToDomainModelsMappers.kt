@@ -14,7 +14,7 @@ fun ImageUiModel.mapToDomainModel(): ImageDomainModel {
         height = height,
         imageUrl = imageUrl,
         photographerName = photographerName,
-        photographerUrl = photographerUrl,
+        photographerWebPageUrl = photographerUrl,
         photographerId = photographerId,
         avgColor = avgColor,
         imageResolutions = imageResolutions.mapToDomainModel(),

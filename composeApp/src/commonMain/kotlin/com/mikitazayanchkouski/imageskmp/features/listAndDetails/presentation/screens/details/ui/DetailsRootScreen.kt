@@ -72,7 +72,8 @@ fun DetailsRoot(
             )
         }
     ),
-    onNavigateBackToListScreen: () -> Unit
+    onNavigateBackToListScreen: () -> Unit,
+    onShowProfileClick: (Long, String, String, String) -> Unit
 ) {
     val imageState by viewModel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -91,7 +92,8 @@ fun DetailsRoot(
     DetailsScreen(
         imageState = imageState,
         userAction = viewModel::onUserAction,
-        onNavigateBack = onNavigateBackToListScreen
+        onNavigateBackToListScreen = onNavigateBackToListScreen,
+        onShowProfileClick = onShowProfileClick
     )
 }
 
@@ -99,7 +101,8 @@ fun DetailsRoot(
 private fun DetailsScreen(
     imageState: ImageDetailsState,
     userAction: (ImageDetailsActions) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBackToListScreen: () -> Unit,
+    onShowProfileClick: (Long, String, String, String) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -143,8 +146,8 @@ private fun DetailsScreen(
         } else {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .windowInsetsPadding(insets = WindowInsets.safeDrawing)
+                    .fillMaxSize()
                     .background(color = colorScheme.background)
                     .padding(all = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(
@@ -156,7 +159,7 @@ private fun DetailsScreen(
                 ImageHeaderCard(
                     imageUrlOriginal = imageState.image.imageResolutions.original,
                     imageDescription = imageState.image.description,
-                    onNavigateBackToListScreen = onNavigateBack
+                    onNavigateBack = onNavigateBackToListScreen
                 )
                 ImageDetailsInfo(
                     modifier = Modifier.fillMaxSize(),
@@ -170,6 +173,14 @@ private fun DetailsScreen(
                             ImageDetailsActions.OnSwitchIsInBookmarksState(
                                 imageId = imageState.image.imageId
                             )
+                        )
+                    },
+                    onShowProfileClick = {
+                        onShowProfileClick(
+                            imageState.image.photographerId,
+                            imageState.image.photographerName,
+                            imageState.image.photographerUrl,
+                            "There is no profile image url from the server"
                         )
                     }
                 )
@@ -225,8 +236,9 @@ private fun DetailsScreenPreview() {
                         description = "Brown Rocks During Golden Hour"
                     )
                 ),
-                userAction = { action -> },
-                onNavigateBack = {}
+                userAction = { _ -> },
+                onNavigateBackToListScreen = {},
+                onShowProfileClick = { _, _, _, _ -> }
             )
         }
     }
