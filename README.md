@@ -11,7 +11,7 @@ Used API: [Pexels API docs](https://www.pexels.com/api/documentation/)
 📧 Email: zayanchkovskij.nikita@gmail.com
 
 P.S. Work is still in progress, this is not the final state of the app. I will add more functionality, tests, etc.\
-P.P.S. If you want to launch and test the app - you need an API key. 🔑
+P.P.S. If you want to launch and test the app - please, write me a personal message, and I will provide you with an API key. 🔑
 
 ### Video demo: [watch on YouTube](https://youtu.be/I_tUvr1YWic?si=ka8YtYP3AW9XA9PJ) 👀
 ### Screenshots are bellow: [App's screenshots](#apps-screenshots)
